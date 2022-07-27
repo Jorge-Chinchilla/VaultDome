@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const User = require('../models/User');
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+const {createAccessToken, checkSession} = require('../controllers/auth.controllers')
 
 router.route('/')
     .get((req,res) => {
@@ -24,7 +26,8 @@ router.route('/register')
             const user = await newUser.save();
             res.status(200).json(user);
         } catch (err){
-            res.status(500).json(e);
+            console.error(err)
+            res.status(500).json(err);
         }
     });
 
@@ -34,12 +37,23 @@ router.route('/login')
         try {
             //Buscamos el email
             const user = await User.findOne({email:req.body.email});
-            !user && res.status(404).send("User not found");
+
+            if (!user){
+                return res.status(404).send("User not found");
+            }
+
             //manejamos una contraseña valida
             const validPassword = await bcrypt.compare(req.body.password, user.password);
-            !validPassword && res.status(400).json("Wrong password");
-            res.status(200).json(user);
+            
+            // Si la contraseña es válida creamos un token de autenticación
+            if(validPassword){
+                return res.status(200).json({accessToken: createAccessToken(user)})
+            }else{
+                return res.status(400).json("Wrong password");
+            }
+
         } catch (e) {
+            console.error(e)
             res.status(500).json(e);
         }
     })

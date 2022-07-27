@@ -1,6 +1,9 @@
 const User = require('../models/User');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const {createAccessToken, checkSession} = require('../controllers/auth.controllers')
+
+
 
 //Manejo de usuarios
 router.route('/:id')
@@ -42,7 +45,8 @@ router.route('/:id')
     });
 
 //Obtener un usuario por nombre o por id
-router.get("/",async (req,res)=>{
+router.get("/", checkSession, async (req,res)=>{
+
     const userId = req.query.userId;
     const username = req.query.username;
     try{
