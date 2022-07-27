@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "nodemon",
             "runtimeExecutable": "node",
-            "args": ["C:\\Users\\gmois\\Documents\\UNAH\\Industria del Software\\Proyecto\\api\\node_modules\\nodemon\\bin\\nodemon.js", "${workspaceFolder}\\api\\index.js" ],
+            "args": ["${workspaceFolder}\\api\\node_modules\\nodemon\\bin\\nodemon.js", "${workspaceFolder}\\api\\index.js" ],
             //"program": "${workspaceFolder}\\api\\index.js",
             "restart": true,
         }
