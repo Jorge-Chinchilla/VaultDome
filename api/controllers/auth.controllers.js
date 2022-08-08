@@ -29,6 +29,18 @@ authCtrl.checkSession = async function verifyToken(req, res, next) {
     
 }
 
+authCtrl.getUserData = function decryptUserData(req, res, next){
+    const token = req.headers.authorization;
+
+    if (!token){
+        req.auth = false;
+        return res.status(400).json("No authorization token");
+    }
+
+    var decoded = jwt.verify(token, 'wrong-secret');
+
+}
+
 
 
 module.exports = authCtrl

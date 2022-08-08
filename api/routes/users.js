@@ -3,8 +3,6 @@ const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const {createAccessToken, checkSession} = require('../controllers/auth.controllers')
 
-
-
 //Manejo de usuarios
 router.route('/:id')
     //Actualizar un usuario
