@@ -1,13 +1,16 @@
 const User = require('../models/User');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const {createAccessToken, checkSession} = require('../controllers/auth.controllers')
+const {createAccessToken, checkSession, getUserData} = require('../controllers/auth.controllers')
 
 //Manejo de usuarios
 router.route('/:id')
     //Actualizar un usuario
-    .put(async(req, res)=>{
-        if(req.body.userId === req.params.id || req.body.isAdmin){
+    .put(checkSession, async(req, res)=>{
+
+        let userData = getUserData(req.headers.authorization);
+
+        if(userData._id === req.params.id || userData.isAdmin){
             if(req.body.password){
                 try {
                     const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
@@ -20,7 +23,7 @@ router.route('/:id')
                 const user = await User.findByIdAndUpdate(req.params.id, {
                     $set:req.body
                 });
-                res.status(200).json("Account updated");
+                res.status(200).json({accessToken: createAccessToken(user)});
             } catch (e) {
                 return res.status(500).json(e);
             }
@@ -29,8 +32,12 @@ router.route('/:id')
         }
     })
     //Eliminar un usuario
-    .delete(async(req, res)=>{
-        if(req.body.userId === req.params.id || req.body.isAdmin){
+    .delete(checkSession, async(req, res)=>{
+
+        let userData = getUserData(req.headers.authorization);
+
+        if(userData._id === req.params.id || req.body.isAdmin){          
+
             try {
                 await User.findByIdAndDelete(req.params.id);
                 res.status(200).json("Account deleted");
@@ -62,16 +69,20 @@ router.get("/", checkSession, async (req,res)=>{
 
 //Seguir a un usuario
 router.route('/:id/follow')
-    .put(async(req,res)=>{
-        if(req.body.userId !== req.params.id){
+    .put(checkSession, async(req,res)=>{
+
+        let userData = getUserData(req.headers.authorization);
+
+        if(userData._id !== req.params.id){
             try {
                 const user = await User.findById(req.params.id);
-                const currentUser = await User.findById(req.body.userId);
-                if(!user.followers.includes(req.body.userId)){
+                const currentUser = await User.findById(userData._id);
+                if(!currentUser.following.includes(req.params.id)){
                     //si el usuario no existe en la lista de seguidores
-                    await user.updateOne({$push: {followers: req.body.userId}});
+                    await user.updateOne({$push: {followers: userData._id}});
                     await currentUser.updateOne({$push: {following: req.params.id}});
-                    res.status(200).json("User has been followed");
+                    let UpdatedCurrentUser = await User.findById(userData._id);
+                    res.status(200).json({accessToken: createAccessToken(UpdatedCurrentUser)});
                 }else{
                     //si el usuario ya existe en la lista de seguidores
                     res.status(403).json("You already follow this user");
@@ -85,16 +96,20 @@ router.route('/:id/follow')
     });
 //Dejar de seguir a un usuario
 router.route('/:id/unfollow')
-    .put(async(req,res)=>{
-        if(req.body.userId !== req.params.id){
+    .put(checkSession, async(req,res)=>{
+
+        let userData = getUserData(req.headers.authorization);
+       
+        if(userData._id !== req.params.id){
             try {
                 const user = await User.findById(req.params.id);
-                const currentUser = await User.findById(req.body.userId);
-                if(user.followers.includes(req.body.userId)){
+                let currentUser = await User.findById(userData._id);
+                if(user.followers.includes(userData._id)){
                     //si el usuario no existe en la lista de seguidores
-                    await user.updateOne({$pull: {followers: req.body.userId}});
+                    await user.updateOne({$pull: {followers: userData._id}});
                     await currentUser.updateOne({$pull: {following: req.params.id}});
-                    res.status(200).json("User has been unfollowed");
+                    currentUser = await User.findById(userData._id);
+                    res.status(200).json({accessToken: createAccessToken(currentUser)});
                 }else{
                     //si el usuario ya existe en la lista de seguidores
                     res.status(403).json("You don't follow this user");

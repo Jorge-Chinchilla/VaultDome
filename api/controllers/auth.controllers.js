@@ -17,10 +17,8 @@ authCtrl.checkSession = async function verifyToken(req, res, next) {
     }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) =>{
         if (err){
-            console.log("Error")
             return res.status(400).json(err);
         }else if(decoded){
-            console.log(decoded)
             req.userData = decoded.data;
             req.auth = true;
             next();
@@ -29,16 +27,14 @@ authCtrl.checkSession = async function verifyToken(req, res, next) {
     
 }
 
-authCtrl.getUserData = function decryptUserData(req, res, next){
-    const token = req.headers.authorization;
+authCtrl.getUserData = function decryptUserData(token){
 
-    if (!token){
-        req.auth = false;
-        return res.status(400).json("No authorization token");
+    try{
+        return JSON.parse(jwt.verify(token, process.env.TOKEN_SECRET).data);
+    }catch(err){
+        return undefined;
     }
-
-    var decoded = jwt.verify(token, 'wrong-secret');
-
+    
 }
 
 
