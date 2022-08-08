@@ -23,11 +23,15 @@ router.route('/register')
                 password: hashPassword
             });
             //guardar usuario y retornar una respuesta
-            const user = await newUser.save();
-            res.status(200).json(user);
+            try{
+                const user = await newUser.save();
+            } catch(err){
+                return res.status(400).json(err);    
+            }            
+            return res.status(200).json({accessToken: createAccessToken(user)});
         } catch (err){
             console.error(err)
-            res.status(500).json(err);
+            return res.status(500).json(err);
         }
     });
 
@@ -53,7 +57,6 @@ router.route('/login')
             }
 
         } catch (e) {
-            console.error(e)
             res.status(500).json(e);
         }
     })

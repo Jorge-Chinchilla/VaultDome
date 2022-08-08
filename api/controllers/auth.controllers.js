@@ -13,7 +13,7 @@ authCtrl.checkSession = async function verifyToken(req, res, next) {
     // Si no encuentra el token
     if (!token) {
         req.auth = false;
-        return  res.status(400).json("No authorization token");
+        return res.status(400).json("No authorization token");
     }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) =>{
         if (err){
