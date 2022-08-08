@@ -59,7 +59,7 @@ router.get("/", checkSession, async (req,res)=>{
             ? await User.findById(userId)
             : await User.findOne({username: username});
         //destructuramos en un array el objeto, guardando la información que deseamos imprimir en "others"
-        const {password, updatedAt, ...other} = user._doc;
+        const {password, updatedAt, createdAt, __v, ...other} = user._doc;
         res.status(200).json(other);
     } catch (e) {
         res.status(500).json(e);
