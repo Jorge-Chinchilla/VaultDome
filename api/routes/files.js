@@ -11,8 +11,8 @@ router.route('/upload')
         let file = req.files.uploadedFile;
         console.log("File:", file);
         try{
-            await upload(file);
-            res.status(200).json();
+            let url = await upload(file);
+            res.status(200).json(url);
         }catch(err){
             console.log(err)
             res.status(500).json(err);

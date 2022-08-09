@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 const { initializeApp } = require('firebase/app');
 const { getStorage } = require('firebase/storage');
-const { ref, uploadBytes } = require('firebase/storage');
+const { ref, uploadBytes, getDownloadURL } = require('firebase/storage');
 const { v4 } = require('uuid');
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,8 +27,10 @@ firebase = {}
 firebase.upload = async (file) =>{
     console.log('File Data: ', file.data)
     const imageRef = ref(storage, `images/${v4()}${file.name}`);
-    console.log(imageRef);
-    await uploadBytes(imageRef, file.data);
+    let snapshot = await uploadBytes(imageRef, file.data);
+    let url = await getDownloadURL(snapshot.ref);
+    return url;
+    
 }
 
 module.exports = firebase;
