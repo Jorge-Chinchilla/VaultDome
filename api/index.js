@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const filesRoute = require("./routes/files");
+const fileUpload = require('express-fileupload');
 
 
 //para usar env
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopolo
 });
 
 //middleware
+app.use(fileUpload());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));

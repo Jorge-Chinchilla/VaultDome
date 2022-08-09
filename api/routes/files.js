@@ -7,9 +7,17 @@ const {createAccessToken, checkSession} = require('../controllers/auth.controlle
 const { upload } = require('../firebase');
 
 router.route('/upload')
-    .post((req,res) => {
-        const file = "hola";
-        upload(file);
+    .post(async (req,res) => {
+        let file = req.files.uploadedFile;
+        console.log("File:", file);
+        try{
+            await upload(file);
+            res.status(200).json();
+        }catch(err){
+            res.status(500).json("Error");
+        }
+        
+
     });
 
 

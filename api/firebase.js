@@ -24,11 +24,11 @@ const storage = getStorage(app);
 
 firebase = {}
 
-firebase.upload = function (file){
-    if(file == null) return;
+firebase.upload = async (file) =>{
+    if(file.Buffer == null) return;
     const imageRef = ref(storage, `images/${v4()}`);
     console.log(imageRef);
-    uploadBytes(imageRef, file);
+    await uploadBytes(file.Buffer, file);
 }
 
 module.exports = firebase;
