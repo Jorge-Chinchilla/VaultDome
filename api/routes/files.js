@@ -14,7 +14,8 @@ router.route('/upload')
             await upload(file);
             res.status(200).json();
         }catch(err){
-            res.status(500).json("Error");
+            console.log(err)
+            res.status(500).json(err);
         }
         
 
