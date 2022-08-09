@@ -19,6 +19,9 @@ const UserSchema = new mongoose.Schema({
     following:{
        type: Array, default:[],
     },
+    sharedFiles:{
+       type: Array, default:[]
+    },
     isAdmin:{
        type: Boolean, default: false,
     },
