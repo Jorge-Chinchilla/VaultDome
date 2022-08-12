@@ -9,17 +9,18 @@ const authRoute = require("./routes/auth");
 const filesRoute = require("./routes/files");
 const subsRouter = require("./routes/subs");
 const fileUpload = require('express-fileupload');
-
+const cors = require('cors');
 
 //para usar env
 dotenv.config();
 
 //Conexión a la base de datos, hosteada con atlas
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true}, () => {
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log("Connected to MONGODB");
 });
 
 //middleware
+app.use(cors());
 app.use(fileUpload());
 app.use(express.json());
 app.use(helmet());
