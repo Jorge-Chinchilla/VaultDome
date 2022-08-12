@@ -11,6 +11,7 @@ const subsRouter = require("./routes/subs");
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
+const PORT = 8080;
 //para usar env
 dotenv.config();
 
@@ -31,6 +32,6 @@ app.use("/api/auth", authRoute);
 app.use('/api/files', filesRoute);
 app.use("/api/subs", subsRouter);
 
-app.listen(8080, () => {
-    console.log("Backend server is running at 8800");
+app.listen(PORT, () => {
+    console.log(`Backend server is running at ${PORT}`);
 })
