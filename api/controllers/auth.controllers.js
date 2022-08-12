@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const User = require("../models/User");
+
 
 authCtrl = {}
 
@@ -15,11 +17,11 @@ authCtrl.checkSession = async function verifyToken(req, res, next) {
         req.auth = false;
         return res.status(400).json("No authorization token");
     }
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) =>{
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) =>{
         if (err){
             return res.status(400).json(err);
         }else if(decoded){
-            req.userData = decoded.data;
+            req.userData = await User.findById(JSON.parse(decoded.data)._id);
             req.auth = true;
             next();
         }

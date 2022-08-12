@@ -6,11 +6,11 @@ const jwt = require('jsonwebtoken');
 const { upload, deleteFile } = require('../firebase');
 const User = require("../models/User");
 const {createAccessToken, checkSession, getUserData} = require('../controllers/auth.controllers');
+const {hardCheckSubscription, softCheckSubscription} = require("../controllers/suscriptions.controller")
 
 router.route('/')
-    .post(checkSession, async (req,res) => {
+    .post(checkSession,  async (req,res) => {
         let file = req.files.uploadedFile;
-        console.log("File:", file);
         try{
             let {url, firebaseDir} = await upload(file);
             const newFile = await new File({
@@ -46,16 +46,70 @@ router.route('/')
             return res.status(403).json("You can only delete your files");
         }
     })
-    //Get all your files
-    .get(checkSession, async(req, res)=>{
-        const userData = getUserData(req.headers.authorization);
+    //Get all your files and shared files
+    .get(checkSession, softCheckSubscription, async(req, res)=>{
         try {
-            const userFiles = await File.find({ userID: userData._id });
-            res.status(200).json(userFiles);
+            const userFiles = await File.find({ userID: req.userData.id });
+            if(req.subscribed){
+                const sharedUserFiles = await Promise.all(
+                    userData.sharedFiles.map(async (fileID) => {
+                        const currFile = await File.findById(fileID);
+                        console.log(currFile);
+                        if(currFile) {
+                            return currFile;
+                        }else{
+                            await userData.updateOne({$pull: {sharedFiles: fileID}});
+                        }
+                    })
+                );
+                return res.status(200).json(userFiles.concat(...sharedUserFiles));
+            }
+            
+            return res.status(200).json(userFiles);
         } catch (err) {
             res.status(500).json(err);
         }
     });
 
+//Sharing a file to another user
+router.route('/share')
+    .post(checkSession, hardCheckSubscription, async (req, res) => {
+        const userData = getUserData(req.headers.authorization);
+        const sharedFileID = await File.findById(req.body.fileID);
+        if(userData._id === sharedFileID.userID) {
+            console.log("Sharing the file");
+            const sharedUser = await User.findById(req.body.sharedUserID)
+            if(!sharedUser.sharedFiles.includes(req.body.fileID)){
+                await sharedUser.updateOne({$push: {sharedFiles: req.body.fileID}});
+                res.status(200).json("File shared");
+            }else{
+                res.status(403).json("File was already shared");
+            }
+        }else{
+            res.status(403).json("You can't share files that you don't own")
+        }
+    })
+    .delete(checkSession, async (req, res) => {
+        const userData = await User.findById(getUserData(req.headers.authorization)._id);
+        if(userData.sharedFiles.includes(req.body.fileID)){
+            await userData.updateOne({$pull: {sharedFiles: req.body.fileID}});
+            res.status(200).json("File removed from your shared files");
+        }else{
+            res.status(403).json("File doesn't exists");
+        }
+    });
+
+//Get a file
+router.route('/:id')
+    .get(checkSession, async(req, res) => {
+        const userData = await User.findById(getUserData(req.headers.authorization)._id);
+        const currFile = await File.findById(req.params.id);
+        if(userData.id === currFile.userID || userData.sharedFiles.includes(req.params.id)) {
+            const currUrl = jwt.verify(currFile.hash, process.env.TOKEN_SECRET).url;
+            res.status(200).json(currUrl);
+        }else{
+            res.status(403).json("User has no access to the file");
+        }
+    });
 
 module.exports = router;
