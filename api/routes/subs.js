@@ -8,10 +8,10 @@ router.route('/')
         try{
             let subsDate = new Date();
             await User.findByIdAndUpdate(req.userData.id, {subscription: subsDate.setMonth(subsDate.getMonth() + 1)});
-            return res.status(200).json("Successful");
+            return res.status(200).json({"message": "Successful"});
         }catch(err){
             console.log(err)
-            return res.status(400).json("Internal Server Error");
+            return res.status(500).json({"message": "Internal Server Error"});
         }
         
 
