@@ -38,7 +38,6 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
 	const session = useSessionStore();
-
 	if (!session.token && to.name !== "Login") return "/login";
 });
 

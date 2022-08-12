@@ -13,10 +13,10 @@ export const useSessionStore = defineStore({
 		token: (state) => state.accessToken,
 	},
 	actions: {
-		login(accessToken: string) {
+		saveToken(accessToken: string) {
 			this.accessToken = accessToken;
 		},
-		logout() {
+		dropToken() {
 			this.accessToken = null;
 		},
 	},

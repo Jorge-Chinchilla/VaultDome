@@ -1,18 +1,32 @@
 <script lang="ts">
+	import { mapActions, mapState } from "pinia";
+	import { useSessionStore } from "../stores/session";
+
 	import apiRequest from "../utils/apiRequest";
 
 	export default {
 		name: "LoginView",
 		data: function () {
 			return {
-				user: null,
+				email: null,
 				password: null,
 			};
 		},
+		computed: {
+			...mapState(useSessionStore, ["token"]),
+		},
 		methods: {
+			...mapActions(useSessionStore, ["saveToken", "dropToken"]),
 			login: async function () {
-				// console.debug(await apiRequest("/api/users/", "post"));
+				const response = await apiRequest("/api/auth/login", { email: this.email, password: this.password });
+				if (response.data) {
+					this.saveToken(response.data?.accessToken);
+					this.$router.push("/profile");
+				}
 			},
+		},
+		beforeMount() {
+			this.dropToken();
 		},
 	};
 </script>
@@ -63,15 +77,15 @@
 					<h3>Login</h3>
 				</div>
 				<div class="mb-3">
-					<label for="UserName" class="form-label">User Name</label>
-					<input v-model="user" type="text" class="form-control" id="user-name" placeholder="e.g. User504" />
+					<label for="email" class="form-label">Email</label>
+					<input v-model="email" type="text" class="form-control" id="email" placeholder="e.g. mail@mail.com" />
 				</div>
 				<div class="mb-3">
 					<label for="password" class="form-label">Password</label>
-					<input v-model="usepasswordr" type="password" class="form-control" id="password" placeholder="e.g. user@pass1234" />
+					<input v-model="password" type="password" class="form-control" id="password" placeholder="e.g. user@pass1234" />
 				</div>
 				<div id="btn-sup" class="mb-3">
-					<button id="" type="button" class="btn btn-outline-secondary" @click="login">
+					<button id="" type="button" class="btn btn-outline-secondary" @click.stop="login">
 						Login
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
 							<path
