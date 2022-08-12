@@ -2,16 +2,16 @@ const router = require('express').Router();
 const User = require('../models/User');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
-const {createAccessToken, checkSession} = require('../controllers/auth.controllers')
+const { createAccessToken, checkSession } = require('../controllers/auth.controllers')
 
 router.route('/')
-    .get((req,res) => {
+    .get((req, res) => {
         res.send("Hey its auth route");
     });
 
 //Registrar
 router.route('/register')
-    .post(async (req,res)=>{
+    .post(async (req, res) => {
         try {
             //generar una contraseña encriptada
             const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
@@ -23,41 +23,41 @@ router.route('/register')
                 password: hashPassword
             });
             //guardar usuario y retornar una respuesta
-            try{
+            try {
                 const user = await newUser.save();
-            } catch(err){
-                return res.status(400).json({"message": err});    
-            }            
-            return res.status(200).json({accessToken: createAccessToken(user)});
-        } catch (err){
+            } catch (err) {
+                return res.status(400).json({ "message": err });
+            }
+            return res.status(200).json({ accessToken: createAccessToken(user) });
+        } catch (err) {
             console.error(err)
-            return res.status(500).json({"message": err});
+            return res.status(500).json({ "message": err });
         }
     });
 
 //Login
 router.route('/login')
-    .post( async (req, res)=>{
+    .post(async (req, res) => {
         try {
             //Buscamos el email
-            const user = await User.findOne({email:req.body.email});
+            const user = await User.findOne({ email: req.body.email });
 
-            if (!user){
+            if (!user) {
                 return res.status(404).send("User not found");
             }
 
             //manejamos una contraseña valida
             const validPassword = await bcrypt.compare(req.body.password, user.password);
-            
+
             // Si la contraseña es válida creamos un token de autenticación
-            if(validPassword){
-                return res.status(200).json({accessToken: createAccessToken(user)})
-            }else{
-                return res.status(400).json({"message": "Wrong password"});
+            if (validPassword) {
+                return res.status(200).json({ accessToken: createAccessToken(user) })
+            } else {
+                return res.status(400).json({ "message": "Wrong password" });
             }
 
         } catch (e) {
-            res.status(500).json({"message": e});
+            res.status(500).json({ "message": e });
         }
     })
 
