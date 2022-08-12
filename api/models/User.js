@@ -10,8 +10,8 @@ const UserSchema = new mongoose.Schema({
     password:{
         type:String, require: true, min:6,
     },
-    profilePicture:{
-       type:String, default:"",
+    subscription:{
+       type:Date, default:Date.now,
     },
     followers:{
        type:Array, default:[],
