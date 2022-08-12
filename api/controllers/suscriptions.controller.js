@@ -6,10 +6,10 @@ subsCtrl.hardCheckSubscription = async function verifyToken(req, res, next) {
         if(req.userData.subscription > Date.now()){
             next();
         }else{
-            return res.status(403).json("subscription expired");
+            return res.status(403).json({"message": "subscription expired"});
         }
     }else{
-        return res.status(403).json("No subscription")    
+        return res.status(403).json({"message": "No subscription"})    
     }
        
 }

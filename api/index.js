@@ -31,6 +31,6 @@ app.use("/api/auth", authRoute);
 app.use('/api/files', filesRoute);
 app.use("/api/subs", subsRouter);
 
-app.listen(8800, () => {
+app.listen(8080, () => {
     console.log("Backend server is running at 8800");
 })

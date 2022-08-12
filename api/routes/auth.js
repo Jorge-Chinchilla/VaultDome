@@ -26,12 +26,12 @@ router.route('/register')
             try{
                 const user = await newUser.save();
             } catch(err){
-                return res.status(400).json(err);    
+                return res.status(400).json({"message": err});    
             }            
             return res.status(200).json({accessToken: createAccessToken(user)});
         } catch (err){
             console.error(err)
-            return res.status(500).json(err);
+            return res.status(500).json({"message": err});
         }
     });
 
@@ -53,11 +53,11 @@ router.route('/login')
             if(validPassword){
                 return res.status(200).json({accessToken: createAccessToken(user)})
             }else{
-                return res.status(400).json("Wrong password");
+                return res.status(400).json({"message": "Wrong password"});
             }
 
         } catch (e) {
-            res.status(500).json(e);
+            res.status(500).json({"message": e});
         }
     })
 

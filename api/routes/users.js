@@ -16,7 +16,7 @@ router.route('/:id')
                     const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
                     req.body.password = await bcrypt.hash(req.body.password, salt);
                 }catch (e) {
-                    return res.status(500).json(e);
+                    return res.status(500).json({"message": e});
                 }
             }
             try {
@@ -25,10 +25,10 @@ router.route('/:id')
                 });
                 res.status(200).json({accessToken: createAccessToken(user)});
             } catch (e) {
-                return res.status(500).json(e);
+                return res.status(500).json({"message": e});
             }
         }else{
-            return res.status(403).json("You can only update your account");
+            return res.status(403).json({"message": "You can only update your account"});
         }
     })
     //Eliminar un usuario
@@ -40,12 +40,12 @@ router.route('/:id')
 
             try {
                 await User.findByIdAndDelete(req.params.id);
-                res.status(200).json("Account deleted");
+                res.status(200).json({"message": "Account deleted"});
             } catch (e) {
-                return res.status(500).json(e);
+                return res.status(500).json({"message": e});
             }
         }else{
-            return res.status(403).json("You can only delete your account");
+            return res.status(403).json({"message": "You can only delete your account"});
         }
     });
 
@@ -62,7 +62,7 @@ router.get("/", checkSession, async (req,res)=>{
         const {password, updatedAt, createdAt, __v, ...other} = user._doc;
         res.status(200).json(other);
     } catch (e) {
-        res.status(500).json(e);
+        res.status(500).json({"message": e});
     }
 });
 
@@ -85,13 +85,13 @@ router.route('/:id/follow')
                     res.status(200).json({accessToken: createAccessToken(UpdatedCurrentUser)});
                 }else{
                     //si el usuario ya existe en la lista de seguidores
-                    res.status(403).json("You already follow this user");
+                    res.status(403).json({"message": "You already follow this user"});
                 }
             }catch (e) {
-                res.status(500).json(e);
+                res.status(500).json({"message": e});
             }
         }else{
-            res.status(403).json("You can't follow yourself");
+            res.status(403).json({"message": "You can't follow yourself"});
         }
     });
 //Dejar de seguir a un usuario
@@ -115,10 +115,10 @@ router.route('/:id/unfollow')
                     res.status(403).json("You don't follow this user");
                 }
             }catch (e) {
-                res.status(500).json(e);
+                res.status(500).json({"message": e});
             }
         }else{
-            res.status(403).json("You can't unfollow yourself");
+            res.status(403).json({"message": "You can't unfollow yourself"});
         }
     });
 
