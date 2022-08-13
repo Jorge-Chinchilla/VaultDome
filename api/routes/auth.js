@@ -25,10 +25,10 @@ router.route('/register')
             //guardar usuario y retornar una respuesta
             try {
                 const user = await newUser.save();
+                return res.status(200).json({ accessToken: createAccessToken(user) });
             } catch (err) {
                 return res.status(400).json({ "message": err });
             }
-            return res.status(200).json({ accessToken: createAccessToken(user) });
         } catch (err) {
             console.error(err)
             return res.status(500).json({ "message": err });

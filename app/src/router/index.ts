@@ -13,6 +13,9 @@ const router = createRouter({
 			path: "/",
 			name: "Home",
 			component: ProfileView,
+			meta: {
+				requireAuth: true,
+			},
 		},
 		{
 			path: "/login",
@@ -28,23 +31,32 @@ const router = createRouter({
 			path: "/profile",
 			name: "Profile",
 			component: ProfileView,
+			meta: {
+				requireAuth: true,
+			},
 		},
 		{
 			path: "/crudUsers",
 			name: "Users Dashboard",
 			component: CrudUsersView,
+			meta: {
+				requireAuth: true,
+			},
 		},
 		{
 			path: "/binnacle",
 			name: "Binnacle",
 			component: BinnacleView,
-		}
+			meta: {
+				requireAuth: true,
+			},
+		},
 	],
 });
 
 router.beforeEach((to, from) => {
 	const session = useSessionStore();
-	if (!session.token && to.name !== "Login") return "/login";
+	if (!session.token && to.meta.requireAuth) return "/login";
 });
 
 export default router;

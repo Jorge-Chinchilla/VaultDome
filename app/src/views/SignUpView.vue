@@ -1,6 +1,39 @@
 <script lang="ts">
+	import { mapActions } from "pinia";
+	import { useSessionStore } from "../stores/session";
+
+	import apiRequest from "../utils/apiRequest";
+
 	export default {
 		name: "SignUpView",
+		data: function () {
+			return {
+				userName: null,
+				email: null,
+				password: null,
+				city: null,
+				showErrorMessage: false,
+			};
+		},
+		methods: {
+			...mapActions(useSessionStore, ["saveToken", "dropToken"]),
+			signUp: async function () {
+				const response = await apiRequest("/api/auth/register", { email: this.email, password: this.password, username: this.userName });
+				console.debug(response);
+				if (response?.data?.accessToken) {
+					this.saveToken(response.data?.accessToken);
+					this.$router.push("/profile");
+				} else {
+					this.showErrorMessage = true;
+					setTimeout(() => {
+						this.showErrorMessage = false;
+					}, 3000);
+				}
+			},
+		},
+		beforeMount() {
+			this.dropToken();
+		},
 	};
 </script>
 
@@ -21,16 +54,10 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="collapse navbar-collapse" id="navbarNav" style="padding-left: 60%">
+				<div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-left: 60%">
 					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a class="nav-link" aria-current="page" href="#">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="#">Sign up</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Login</a>
+						<li class="nav-item clicklable">
+							<a class="nav-link" @click="$router.push('/login')">Login</a>
 						</li>
 					</ul>
 				</div>
@@ -51,23 +78,23 @@
 					<h3>Sign Up</h3>
 				</div>
 				<div class="mb-3">
-					<label for="UserName" class="form-label">User Name</label>
-					<input type="text" class="form-control" id="UserName" placeholder="e.g. User504" />
+					<label for="user-name" class="form-label">User Name</label>
+					<input v-model="userName" type="text" class="form-control" id="user-name" placeholder="e.g. User504" />
 				</div>
 				<div class="mb-3">
 					<label for="email" class="form-label">Email address</label>
-					<input type="email" class="form-control" id="email" placeholder="e.g. name@example.com" />
+					<input v-model="email" type="email" class="form-control" id="email" placeholder="e.g. name@example.com" />
 				</div>
 				<div class="mb-3">
 					<label for="password" class="form-label">Password</label>
-					<input type="password" class="form-control" id="password" placeholder="e.g. @pass1234" />
+					<input v-model="password" type="password" class="form-control" id="password" placeholder="e.g. @pass1234" />
 				</div>
 				<div class="mb-3">
-					<label for="City" class="form-label">City</label>
-					<input type="text" class="form-control" id="City" placeholder="e.g. Tegucigalpa, Honduras" />
+					<label for="city" class="form-label">City</label>
+					<input v-model="city" type="text" class="form-control" id="city" placeholder="e.g. Tegucigalpa, Honduras" />
 				</div>
 				<div id="btn-sup" class="mb-3">
-					<button id="" type="button" class="btn btn-outline-secondary">
+					<button id="" type="button" class="btn btn-outline-secondary" @click="signUp">
 						Sign Up
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
 							<path
@@ -78,6 +105,12 @@
 						</svg>
 					</button>
 				</div>
+
+				<Transition>
+					<div v-show="showErrorMessage" class="mt-3">
+						<small class="text-danger text-uppercase">Can't create user, try again...</small>
+					</div>
+				</Transition>
 			</div>
 		</div>
 		<!--Sign up ends-->

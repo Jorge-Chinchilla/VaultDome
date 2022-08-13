@@ -10,6 +10,7 @@
 			return {
 				email: null,
 				password: null,
+				showErrorMessage: false,
 			};
 		},
 		computed: {
@@ -22,6 +23,11 @@
 				if (response.data) {
 					this.saveToken(response.data?.accessToken);
 					this.$router.push("/profile");
+				} else {
+					this.showErrorMessage = true;
+					setTimeout(() => {
+						this.showErrorMessage = false;
+					}, 3000);
 				}
 			},
 		},
@@ -48,16 +54,10 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div class="collapse navbar-collapse" id="navbarNav" style="padding-left: 60%">
+				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
 					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a class="nav-link" aria-current="page" href="#">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Sign up</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="#">Login</a>
+						<li class="nav-item clicklable">
+							<a class="nav-link" @click="$router.push('/signup')">Sign up</a>
 						</li>
 					</ul>
 				</div>
@@ -96,6 +96,12 @@
 						</svg>
 					</button>
 				</div>
+
+				<Transition>
+					<div v-show="showErrorMessage" class="mt-3">
+						<small class="text-danger text-uppercase">Wrong credentials, try again...</small>
+					</div>
+				</Transition>
 			</div>
 		</div>
 		<!--Sign up ends-->
