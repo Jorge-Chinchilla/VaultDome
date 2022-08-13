@@ -4,6 +4,7 @@ import LoginView from "@/views/LoginView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import CrudUsersView from "@/views/CrudUsersView.vue";
+import BinnacleView from "@/views/BinnacleView.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
 			name: "Users Dashboard",
 			component: CrudUsersView,
 		},
+		{
+			path: "/binnacle",
+			name: "Binnacle",
+			component: BinnacleView,
+		}
 	],
 });
 
