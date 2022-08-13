@@ -11,7 +11,7 @@
 				userName: null,
 				email: null,
 				password: null,
-				city: null,
+				// city: null,
 				showErrorMessage: false,
 			};
 		},
@@ -89,10 +89,10 @@
 					<label for="password" class="form-label">Password</label>
 					<input v-model="password" type="password" class="form-control" id="password" placeholder="e.g. @pass1234" />
 				</div>
-				<div class="mb-3">
+				<!-- <div class="mb-3">
 					<label for="city" class="form-label">City</label>
 					<input v-model="city" type="text" class="form-control" id="city" placeholder="e.g. Tegucigalpa, Honduras" />
-				</div>
+				</div> -->
 				<div id="btn-sup" class="mb-3">
 					<button id="" type="button" class="btn btn-outline-secondary" @click="signUp">
 						Sign Up
