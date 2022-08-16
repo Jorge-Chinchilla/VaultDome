@@ -89,6 +89,10 @@
 					<label for="password" class="form-label">Password</label>
 					<input v-model="password" type="password" class="form-control" id="password" placeholder="e.g. @pass1234" />
 				</div>
+				<div class="mb-3">
+					<label for="profilePic" class="form-label">Profile Picture</label>
+					<input type="file" class="form-control" id="profilePic">
+				</div>
 				<!-- <div class="mb-3">
 					<label for="city" class="form-label">City</label>
 					<input v-model="city" type="text" class="form-control" id="city" placeholder="e.g. Tegucigalpa, Honduras" />

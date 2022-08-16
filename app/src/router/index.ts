@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useSessionStore } from "@/stores/session";
+import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import CrudUsersView from "@/views/CrudUsersView.vue";
 import BinnacleView from "@/views/BinnacleView.vue";
+import SuscriptionView from "@/views/SuscriptionView.vue";
+import ProfileFollow from "@/views/ProfileFollow.vue";
+
+
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +52,22 @@ const router = createRouter({
 			path: "/binnacle",
 			name: "Binnacle",
 			component: BinnacleView,
+			meta: {
+				requireAuth: true,
+			},
+		},
+		{
+			path: "/suscription",
+			name: "Suscription",
+			component: SuscriptionView,
+			meta: {
+				requireAuth: true,
+			},
+		},
+		{
+			path: "/profilefollow",
+			name: "ProfileFollow",
+			component: ProfileFollow,
 			meta: {
 				requireAuth: true,
 			},

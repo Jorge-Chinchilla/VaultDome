@@ -47,13 +47,13 @@
 
 							<div class="mt-3">
 								<h4>Nombre de usuario</h4>
-								<!--<button class="btn btn-outline-secondary">Follow</button>
-                      <button class="btn btn-outline-primary">Message</button>-->
+								<button class="btn btn-info">Subscribe</button>
+                      <!--<button class="btn btn-outline-primary">Message</button>-->
 							</div>
 						</div>
 					</div>
 				</div>
-								<div class="card mb-3">
+				<div class="card mb-3">
 					<div class="card-body">
 						<div class="row">
 							<div class="col-sm-3">
@@ -71,9 +71,9 @@
 						<hr />
 						<div class="row">
 							<div class="col-sm-3">
-								<h6 class="mb-0">Ciudad</h6>
+								<h6 class="mb-0">Expiration date Suscrip.</h6>
 							</div>
-							<div class="col-sm-9 text-secondary">Ejemplo ciudad</div>
+							<div class="col-sm-9 text-secondary">ejemplo 23/11/2022</div>
 						</div>
 						<hr />
 						<div class="row">
