@@ -37,7 +37,7 @@
 			</div>
 		</nav>
 		<!--Navbar ends-->
-		<div class="container">
+		<div id="clp" class="container">
 			<div id="content" class=" row">
 				<div class="col-md-6 padre">
 				<div class="card">
@@ -66,11 +66,10 @@
 </template>
 
 <style>
-	.container{
-		background-color:#8AC9FE !important;
-		height: 500px;
+	.container{		
+
 		width: 100% !important;
-		margin-top: 35px;
+		
 	}
 
 	button{
@@ -80,6 +79,12 @@
 	.padre {
 		display: flex;
 		align-items: center;
+	}
+
+	#clp{
+		background-color:#8AC9FE !important;		
+		width: 100% !important;
+		margin-top: 35px;
 	}
 </style>
 
