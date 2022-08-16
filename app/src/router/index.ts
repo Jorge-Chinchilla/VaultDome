@@ -9,18 +9,13 @@ import BinnacleView from "@/views/BinnacleView.vue";
 import SuscriptionView from "@/views/SuscriptionView.vue";
 import ProfileFollow from "@/views/ProfileFollow.vue";
 
-
-
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
 		{
 			path: "/",
 			name: "Home",
-			component: ProfileView,
-			meta: {
-				requireAuth: true,
-			},
+			component: HomeView,
 		},
 		{
 			path: "/login",

@@ -3,9 +3,13 @@
 	import { useSessionStore } from "../stores/session";
 
 	import apiRequest from "../utils/apiRequest";
+	import AppNavbar from "../components/AppNavbar.vue";
 
 	export default {
 		name: "LoginView",
+		components: {
+			AppNavbar,
+		},
 		data: function () {
 			return {
 				email: null,
@@ -39,31 +43,7 @@
 
 <template>
 	<main>
-		<!--Navbar-->
-		<nav class="navbar navbar-expand-lg bg-light">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#"><img src="../assets/img/logo.png" class="img-fluid" style="max-with:100%, max-height:100%" />Vault Dome</a>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarNav"
-					aria-controls="navbarNav"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-					<ul class="navbar-nav">
-						<li class="nav-item clicklable">
-							<a class="nav-link" @click="$router.push('/signup')">Sign up</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!--Navbar ends-->
+		<AppNavbar home signup />
 
 		<!--Sign up form-->
 		<div id="signup-f">

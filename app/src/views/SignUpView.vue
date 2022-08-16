@@ -3,15 +3,16 @@
 	import { useSessionStore } from "../stores/session";
 
 	import apiRequest from "../utils/apiRequest";
+	import AppNavbar from "../components/AppNavbar.vue";
 
 	export default {
 		name: "SignUpView",
+		components: { AppNavbar },
 		data: function () {
 			return {
 				userName: null,
 				email: null,
 				password: null,
-				// city: null,
 				showErrorMessage: false,
 			};
 		},
@@ -39,31 +40,7 @@
 
 <template>
 	<main>
-		<!--Navbar-->
-		<nav class="navbar navbar-expand-lg bg-light">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#"><img src="../assets/img/logo.png" class="img-fluid" style="max-with:100%, max-height:100%" />Vault Dome</a>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#navbarNav"
-					aria-controls="navbarNav"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-left: 60%">
-					<ul class="navbar-nav">
-						<li class="nav-item clicklable">
-							<a class="nav-link" @click="$router.push('/login')">Login</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!--Navbar ends-->
+		<AppNavbar home login />
 
 		<!--Sign up form-->
 		<div id="signup-f">
@@ -91,12 +68,9 @@
 				</div>
 				<div class="mb-3">
 					<label for="profilePic" class="form-label">Profile Picture</label>
-					<input type="file" class="form-control" id="profilePic">
+					<input type="file" class="form-control" id="profilePic" />
 				</div>
-				<!-- <div class="mb-3">
-					<label for="city" class="form-label">City</label>
-					<input v-model="city" type="text" class="form-control" id="city" placeholder="e.g. Tegucigalpa, Honduras" />
-				</div> -->
+
 				<div id="btn-sup" class="mb-3">
 					<button id="" type="button" class="btn btn-outline-secondary" @click="signUp">
 						Sign In

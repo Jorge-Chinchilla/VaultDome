@@ -1,22 +1,21 @@
 import { defineStore } from "pinia";
 
-export interface Item {
+export interface Session {
 	accessToken: string | null;
 }
 
-export const useSessionStore = defineStore({
-	id: "session",
-	state: (): Item => ({
+export const useSessionStore = defineStore("session", {
+	state: (): Session => ({
 		accessToken: null,
 	}),
 	getters: {
 		token: (state) => state.accessToken,
 	},
 	actions: {
-		saveToken(accessToken: string) {
+		saveToken: function (accessToken: string) {
 			this.accessToken = accessToken;
 		},
-		dropToken() {
+		dropToken: function () {
 			this.accessToken = null;
 		},
 	},
