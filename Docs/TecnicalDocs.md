@@ -1,5 +1,34 @@
 # Documentación del backend/API
 
+## Estándares
+Definición de arquitectura de archivos y estándares a utilizar en el desarrollo del backend del proyecto
+
+```
+    api/
+    ├─index.js
+    ├─firebase.js
+    ├─controllers/
+    ├ └─ auth.controllers.js
+    ├──  suscriptions.controllers.js
+    ├─models/
+    ├ └─ File.js
+    ├──  User.js
+    ├─routes/
+    ├─└─ auth.js
+    ├──  files.js
+    ├──  subs.js
+    ├──  users.js
+```
+
+* index.js: Punto de arranque de la API
+* firebase.js: Funciones y métodos necesarios para la conexión con Firebase, esto para el manejo de archivos
+* auth.controllers.js: Funciones y métodos para autenticación
+* subscriptions.controllers.js: Funciones y métodos para manejo de suscripciones
+* File.js: Definición de Esquema de Archivo
+* User.js: Definición de Esquema de Usuario
+* auth.js: Definición de Rutas 
+
+
 ## Controladores
 La definción de los controladores fue basada en el requerimiento de tener la posibilidad de hacer revisión de la autenticación y estado de la suscripciones de los usarios en multiples endpoints de la API.
 
