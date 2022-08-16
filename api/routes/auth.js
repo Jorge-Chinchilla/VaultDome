@@ -25,7 +25,7 @@ router.route('/register')
             //guardar usuario y retornar una respuesta
             try {
                 const user = await newUser.save();
-                return res.status(200).json({ accessToken: createAccessToken(user) });
+                return res.status(200).json({ accessToken: createAccessToken(user), userId: user.id });
             } catch (err) {
                 return res.status(400).json({ "message": err });
             }
@@ -51,7 +51,7 @@ router.route('/login')
 
             // Si la contraseña es válida creamos un token de autenticación
             if (validPassword) {
-                return res.status(200).json({ accessToken: createAccessToken(user) })
+                return res.status(200).json({ accessToken: createAccessToken(user), userId: user.id })
             } else {
                 return res.status(400).json({ "message": "Wrong password" });
             }
