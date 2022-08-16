@@ -207,9 +207,9 @@ Método: PUT
 
 Headers de solicitud: 
 ```json
-    {
-        authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
-    }
+{
+    authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
+}
 ```
 
 Body de solicitud: 
@@ -257,9 +257,9 @@ Método: PUT
 
 Headers de solicitud: 
 ```json
-    {
-        authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
-    }
+{
+    authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
+}
 ```
 
 Body de solicitud: 
@@ -309,9 +309,9 @@ Método: GET
 
 Headers de solicitud: 
 ```json
-    {
-        authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
-    }
+{
+    authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
+}
 ```
 
 Body de solicitud: 
@@ -328,14 +328,67 @@ Body de respuesta:
 
 Ejemplo
 ```json
-    {
-        "followers": [],
-        "following": [
-            "62e0b51d6432d04c700f2561"
-        ],
-        "isAdmin": false,
-        "_id": "62df5890b010114e2c4d813b",
-        "username": "user-test1",
-        "email": "email-user-test1"
-    }
+{
+    "followers": [],
+    "following": [
+        "62e0b51d6432d04c700f2561"
+    ],
+    "isAdmin": false,
+    "_id": "62df5890b010114e2c4d813b",
+    "username": "user-test1",
+    "email": "email-user-test1"
+}
+```
+
+# Subir archivo
+
+URL: host:8800/api/files/
+
+Método: POST
+
+Headers de solicitud:
+```json
+{
+    authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
+}
+```
+
+Body de solicitud: 
+form-data body
+```json
+{
+    'uploadedFile': File,
+    'description': 'File description'
+}
+```
+
+Body de respuesta:
+
+Estatus 200:
+```json
+{
+    'url': "FileURL"
+}
+```
+
+# Compartir un archivo
+
+URL: localhost:8800/api/files/share
+
+Método: POST
+
+Headers de solicitud:
+```json
+{
+    authorization: eyJhbGciOiJIUzI1NiIsI...nR5cCI6IkpXVCJ9J1c-rFb8
+}
+```
+
+Body de solicitud: 
+form-data body
+```json
+{
+    "fileID": "62f3416f8cd3420511f8f3bb",
+    "sharedUserID": "62e0b751d8e5cc5e906f5dcd"
+}
 ```
