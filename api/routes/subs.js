@@ -9,7 +9,7 @@ router.route('/')
 
         try{
             let subsDate = new Date();
-            await User.findByIdAndUpdate(req.userData.id, {subscription: subsDate.setMonth(subsDate.getMonth() + 1)});
+            await User.findByIdAndUpdate(req.userData.id, {subscription: subsDate.setMonth(subsDate.getMonth() + months)});
             return res.status(200).json({"message": "Successful"});
         }catch(err){
             console.log(err)
