@@ -18,14 +18,14 @@
 			};
 		},
 		computed: {
-			...mapState(useSessionStore, ["token"]),
+			...mapState(useSessionStore, ["token", "userId"]),
 		},
 		methods: {
-			...mapActions(useSessionStore, ["saveToken", "dropToken"]),
-			login: async function () {
+			...mapActions(useSessionStore, ["login", "logout"]),
+			requestLogin: async function () {
 				const response = await apiRequest("/api/auth/login", { email: this.email, password: this.password });
 				if (response.data) {
-					this.saveToken(response.data?.accessToken);
+					this.login(response.data?.accessToken, response.data?.userId);
 					this.$router.push("/profile");
 				} else {
 					this.showErrorMessage = true;
@@ -36,7 +36,7 @@
 			},
 		},
 		beforeMount() {
-			this.dropToken();
+			this.logout();
 		},
 	};
 </script>
@@ -65,7 +65,7 @@
 					<input v-model="password" type="password" class="form-control" id="password" placeholder="e.g. user@pass1234" />
 				</div>
 				<div id="btn-sup" class="mb-3">
-					<button id="" type="button" class="btn btn-outline-secondary" @click.stop="login">
+					<button id="" type="button" class="btn btn-outline-secondary" @click.stop="requestLogin">
 						Login
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
 							<path

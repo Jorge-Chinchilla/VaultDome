@@ -3,11 +3,26 @@
 	import { mapState } from "pinia";
 	import { useSessionStore } from "../stores/session";
 
+	// import apiRequest from "../utils/apiRequest";
+
 	export default {
 		name: "ProfileView",
 		components: { AppNavbar },
 		computed: {
 			...mapState(useSessionStore, ["token"]),
+
+			// user: async function () {
+			// 	const response = await apiRequest(`/api/user?username=`);
+			// 	if (response.data) {
+			// 		this.saveToken(response.data?.accessToken);
+			// 		this.$router.push("/profile");
+			// 	} else {
+			// 		this.showErrorMessage = true;
+			// 		setTimeout(() => {
+			// 			this.showErrorMessage = false;
+			// 		}, 3000);
+			// 	}
+			// }
 		},
 	};
 </script>
