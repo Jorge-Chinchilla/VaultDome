@@ -1,26 +1,26 @@
 import { defineStore } from "pinia";
 
 export interface Session {
-	accessToken: string | null;
-	userId: string | null;
+	accessToken: string;
+	userId: string;
 }
 
 export const useSessionStore = defineStore("session", {
 	state: (): Session => ({
-		accessToken: null,
-		userId: null,
+		accessToken: "",
+		userId: "",
 	}),
 	getters: {
-		token: (state) => state.accessToken,
-		userId: (state) => state.userId,
+		getToken: (state) => state.accessToken,
+		getUserId: (state) => state.userId,
 	},
 	actions: {
-		login: function (accessToken: string, userId: string) {
+		setLogin: function (accessToken: string, userId: string) {
 			this.accessToken = accessToken;
 			this.userId = userId;
 		},
-		logout: function () {
-			this.accessToken = null;
+		setLogout: function () {
+			this.accessToken = "";
 		},
 	},
 });

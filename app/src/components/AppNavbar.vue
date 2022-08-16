@@ -19,7 +19,7 @@
 			...mapState(useSessionStore, ["token"]),
 		},
 		methods: {
-			...mapActions(useSessionStore, ["logout"]),
+			...mapActions(useSessionStore, ["setLogout"]),
 
 			goToLogin: function () {
 				this.$router.push("/login");
@@ -43,7 +43,7 @@
 				this.$router.push("/suscribe");
 			},
 			goLogout: function () {
-				this.logout();
+				this.setLogout();
 				this.$router.push("/login");
 			},
 		},

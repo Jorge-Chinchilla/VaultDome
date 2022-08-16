@@ -17,15 +17,12 @@
 				showErrorMessage: false,
 			};
 		},
-		computed: {
-			...mapState(useSessionStore, ["token", "userId"]),
-		},
 		methods: {
-			...mapActions(useSessionStore, ["login", "logout"]),
+			...mapActions(useSessionStore, ["setLogin", "setLogout"]),
 			requestLogin: async function () {
 				const response = await apiRequest("/api/auth/login", { email: this.email, password: this.password });
 				if (response.data) {
-					this.login(response.data?.accessToken, response.data?.userId);
+					this.setLogin(response.data?.accessToken, response.data?.userId);
 					this.$router.push("/profile");
 				} else {
 					this.showErrorMessage = true;
@@ -36,7 +33,7 @@
 			},
 		},
 		beforeMount() {
-			this.logout();
+			this.setLogout();
 		},
 	};
 </script>

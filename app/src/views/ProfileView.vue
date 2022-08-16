@@ -3,35 +3,53 @@
 	import { mapState } from "pinia";
 	import { useSessionStore } from "../stores/session";
 
-	// import apiRequest from "../utils/apiRequest";
+	import moment from "moment";
+	import apiRequest from "../utils/apiRequest";
+
+	interface User {
+		email: string;
+		followers: Array<string>;
+		following: Array<string>;
+		isAdmin: boolean;
+		profilePicture: string;
+		sharedFiles: Array<string>;
+		subscription: string;
+		username: string;
+		_id: string;
+	}
 
 	export default {
 		name: "ProfileView",
 		components: { AppNavbar },
+		data: function () {
+			return {
+				user: {},
+			};
+		},
 		computed: {
-			...mapState(useSessionStore, ["token"]),
-
-			// user: async function () {
-			// 	const response = await apiRequest(`/api/user?username=`);
-			// 	if (response.data) {
-			// 		this.saveToken(response.data?.accessToken);
-			// 		this.$router.push("/profile");
-			// 	} else {
-			// 		this.showErrorMessage = true;
-			// 		setTimeout(() => {
-			// 			this.showErrorMessage = false;
-			// 		}, 3000);
-			// 	}
-			// }
+			...mapState(useSessionStore, ["getToken", "getUserId"]),
+		},
+		methods: {
+			userRequest: async function (): Promise<User | null> {
+				const response = await apiRequest(`/api/users?userId=${this.getUserId}`);
+				console.debug(response.data);
+				this.user = response.data;
+			},
+			moment: function (date: string) {
+				return moment(date).format("MMMM Do YYYY, h:mm:ss a");
+			},
+		},
+		mounted() {
+			this.userRequest();
 		},
 	};
 </script>
 
 <template>
 	<main>
-		<AppNavbar binnacle users-managment suscribe profile />
+		<AppNavbar binnacle users-managment suscribe profile logout />
 
-		<div class="row gutters-sm" style="margin-top: 40px">
+		<div v-if="user" class="row gutters-sm" style="margin-top: 40px">
 			<div class="col-md-4 mb-3">
 				<div class="card">
 					<div class="card-body">
@@ -39,7 +57,7 @@
 							<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150" />
 
 							<div class="mt-3">
-								<h4>Nombre de usuario</h4>
+								<h4>{{ user?.username }}</h4>
 								<button class="btn btn-info">Subscribe</button>
 								<!--<button class="btn btn-outline-primary">Message</button>-->
 							</div>
@@ -52,21 +70,21 @@
 							<div class="col-sm-3">
 								<h6 class="mb-0">Nombre de Usuario</h6>
 							</div>
-							<div class="col-sm-9 text-secondary">Ejemplo Nombre</div>
+							<div class="col-sm-9 text-secondary">{{ user?.username }}</div>
 						</div>
 						<hr />
 						<div class="row">
 							<div class="col-sm-3">
 								<h6 class="mb-0">Email</h6>
 							</div>
-							<div class="col-sm-9 text-secondary">email@ejemplo.com</div>
+							<div class="col-sm-9 text-secondary">{{ user?.email }}</div>
 						</div>
 						<hr />
 						<div class="row">
 							<div class="col-sm-3">
 								<h6 class="mb-0">Expiration date Suscrip.</h6>
 							</div>
-							<div class="col-sm-9 text-secondary">ejemplo 23/11/2022</div>
+							<div class="col-sm-9 text-secondary">{{ moment(user?.subscription) }}</div>
 						</div>
 						<hr />
 						<div class="row">

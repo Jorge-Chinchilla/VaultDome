@@ -1,6 +1,11 @@
 <script lang="ts">
+	import AppNavbar from "../components/AppNavbar.vue";
+
 	export default {
 		name: "HomeView",
+		components: {
+			AppNavbar,
+		},
 	};
 </script>
 

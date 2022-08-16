@@ -17,12 +17,11 @@
 			};
 		},
 		methods: {
-			...mapActions(useSessionStore, ["login", "logout"]),
+			...mapActions(useSessionStore, ["setLogin", "setLogout"]),
 			signUp: async function () {
 				const response = await apiRequest("/api/auth/register", { email: this.email, password: this.password, username: this.userName });
-				console.debug(response);
 				if (response?.data?.accessToken) {
-					this.login(response.data?.accessToken, response.data?.userId);
+					this.setLogin(response.data?.accessToken, response.data?.userId);
 					this.$router.push("/profile");
 				} else {
 					this.showErrorMessage = true;
@@ -33,7 +32,7 @@
 			},
 		},
 		beforeMount() {
-			this.logout();
+			this.setLogout();
 		},
 	};
 </script>
