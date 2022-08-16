@@ -5,6 +5,8 @@ const {checkSession} = require('../controllers/auth.controllers');
 router.route('/')
     .post(checkSession, async (req,res) =>{
 
+        months = req.body.months ? req.body.months : 1
+
         try{
             let subsDate = new Date();
             await User.findByIdAndUpdate(req.userData.id, {subscription: subsDate.setMonth(subsDate.getMonth() + 1)});
@@ -14,7 +16,6 @@ router.route('/')
             return res.status(500).json({"message": "Internal Server Error"});
         }
         
-
     })
 
 
