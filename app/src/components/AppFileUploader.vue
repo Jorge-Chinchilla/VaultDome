@@ -65,8 +65,8 @@
 					<button type="button" class="btn btn-primary" @click="uploadFile">Save</button>
 
 					<div class="w-100">
-						<p v-show="showSuccessMessage" class="text-success">Image uploaded!</p>
-						<p v-show="showErrorMessage" class="text-danger">Error. Image not uploaded :(</p>
+						<p v-show="showSuccessMessage" class="text-success">File uploaded!</p>
+						<p v-show="showErrorMessage" class="text-danger">Error. File not uploaded :(</p>
 					</div>
 				</div>
 			</div>
