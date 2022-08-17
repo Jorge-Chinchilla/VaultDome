@@ -55,9 +55,31 @@ router.get("/", checkSession, async (req,res)=>{
     const userId = req.query.userId;
     const username = req.query.username;
     try{
-        const user = userId
+        let user = userId
             ? await User.findById(userId)
             : await User.findOne({username: username});
+        
+
+        let followers = await Promise.all(user.followers.map(async (userId)=>{
+            let user = await User.findById(userId)
+            return user
+        }))
+
+        
+
+        
+        let following = await Promise.all(user.following.map(async (userId)=>{
+            let user = await User.findById(userId)
+            return user
+        }))
+
+
+        user.followers = followers
+        user.following = following
+
+        
+        
+
         //destructuramos en un array el objeto, guardando la información que deseamos imprimir en "others"
         const {password, updatedAt, createdAt, __v, ...other} = user._doc;
         res.status(200).json(other);

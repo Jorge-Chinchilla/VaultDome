@@ -8,6 +8,7 @@ const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const filesRoute = require("./routes/files");
 const subsRouter = require("./routes/subs");
+const logsRouter = require("./routes/log");
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
@@ -31,6 +32,8 @@ app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use('/api/files', filesRoute);
 app.use("/api/subs", subsRouter);
+app.use("/api/logs", logsRouter);
+
 
 app.listen(PORT, () => {
     console.log(`Backend server is running at ${PORT}`);

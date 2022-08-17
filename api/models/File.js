@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const FileSchema = new mongoose.Schema({
         userID:{
-            type:String, required:true
+            type:String
         },
         desc:{
             type:String, max:500

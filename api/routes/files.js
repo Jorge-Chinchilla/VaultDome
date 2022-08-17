@@ -55,7 +55,6 @@ router.route('/')
                 const sharedUserFiles = await Promise.all(
                     req.userData.sharedFiles.map(async (fileID) => {
                         const currFile = await File.findById(fileID);
-                        console.log(currFile);
                         if (currFile) {
                             return currFile;
                         } else {
