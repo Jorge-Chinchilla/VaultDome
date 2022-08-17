@@ -62,7 +62,7 @@ router.get("/", checkSession, async (req,res)=>{
 
         let followers = await Promise.all(user.followers.map(async (userId)=>{
             let user = await User.findById(userId)
-            return user
+            return {id: user.id, username: user.username}
         }))
 
         
@@ -70,7 +70,7 @@ router.get("/", checkSession, async (req,res)=>{
         
         let following = await Promise.all(user.following.map(async (userId)=>{
             let user = await User.findById(userId)
-            return user
+            return {id: user.id, username: user.username}
         }))
 
 
