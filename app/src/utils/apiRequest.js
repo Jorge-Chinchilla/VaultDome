@@ -15,13 +15,12 @@ const apiRequest = async (path, data, method) => {
 		return error;
 	};
 	const request = `https://api.bedev.dev${path}`;
-	if (!data && method != "get") {
+	if (!data && method != "delete") {
 		return await axios
 			.get(request, config)
 			.then((response) => response)
 			.catch((error) => errorLog(error));
 	} else if (method === "delete") {
-		console.debug("DELETE");
 		return await axios
 			.delete(request, config)
 			.then((response) => response)
