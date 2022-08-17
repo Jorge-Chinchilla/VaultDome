@@ -3,6 +3,8 @@ const User = require('../models/User');
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const { createAccessToken, checkSession } = require('../controllers/auth.controllers')
+const { LogActivity, logActivityCustom } = require('../controllers/logs.controller')
+
 
 router.route('/')
     .get((req, res) => {
@@ -11,7 +13,7 @@ router.route('/')
 
 //Registrar
 router.route('/register')
-    .post(async (req, res) => {
+    .post(LogActivity, async (req, res) => {
         try {
             //generar una contraseña encriptada
             const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
@@ -25,7 +27,9 @@ router.route('/register')
             //guardar usuario y retornar una respuesta
             try {
                 const user = await newUser.save();
+                try{await logActivityCustom(user.id, "post", "SuccessRegister")}catch(err){}
                 return res.status(200).json({ accessToken: createAccessToken(user), userId: user.id });
+                
             } catch (err) {
                 return res.status(400).json({ "message": err });
             }
@@ -37,7 +41,7 @@ router.route('/register')
 
 //Login
 router.route('/login')
-    .post(async (req, res) => {
+    .post(LogActivity, async (req, res) => {
         try {
             //Buscamos el email
             const user = await User.findOne({ email: req.body.email });
@@ -51,7 +55,10 @@ router.route('/login')
 
             // Si la contraseña es válida creamos un token de autenticación
             if (validPassword) {
+                try{await logActivityCustom(user.id, "post", "SuccessLogin")}catch(err){}
+                
                 return res.status(200).json({ accessToken: createAccessToken(user), userId: user.id })
+                
             } else {
                 return res.status(400).json({ "message": "Wrong password" });
             }
