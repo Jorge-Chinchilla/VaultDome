@@ -6,12 +6,38 @@
 		data: function () {
 			return {
 				users: [],
+				user: null,
+				message: null,
 			};
 		},
-		methods: {},
-		mounted: async function () {
-			const response = await apiRequest(`/api/users/all`);
-			this.users = response.data;
+		methods: {
+			getUsers: async function () {
+				const response = await apiRequest(`/api/users/all`);
+				this.users = response.data;
+			},
+			setUserId: function (id) {
+				this.user = id;
+			},
+			deleteUser: async function () {
+				const response = await apiRequest(`/api/users/${this.user}`, null, "delete");
+				if (response.data?.message) {
+					this.message = response.data?.message;
+				} else {
+					this.message = "Error";
+				}
+
+				setTimeout(() => {
+					this.message = null;
+				}, 3000);
+
+				this.getUsers();
+
+				this.user = null;
+				this.$refs.closeDeleteBtn?.click();
+			},
+		},
+		mounted: function () {
+			this.getUsers();
 		},
 	};
 </script>
@@ -54,6 +80,8 @@
 		<div class="limiter">
 			<div class="container">
 				<h1>CRUD Users</h1>
+				<h4 v-if="message == 'Error'" class="text-danger">{{ message }}</h4>
+				<h4 v-if="message != 'Error'" class="text-success">{{ message }}</h4>
 				<table class="table">
 					<thead class="thead-dark">
 						<tr>
@@ -71,8 +99,10 @@
 							<td>{{ user?.isAdmin }}</td>
 							<td>{{ user?.subscription }}</td>
 							<td>
-								<button type="button" class="ED btn btn-warning">Edit</button>
-								<button type="button" class="ED btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+								<button type="button" class="ED btn btn-warning" :ref="'editUserBtn' + user?._id">Edit</button>
+								<button type="button" class="ED btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" @click="setUserId(user?._id)">
+									Delete
+								</button>
 							</td>
 						</tr>
 					</tbody>
@@ -93,8 +123,8 @@
 					</div>
 					<div class="modal-body">Are you sure you want to delete this user?</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-danger">Delete</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="closeDeleteBtn">Close</button>
+						<button type="button" class="btn btn-danger" @click="deleteUser(user?._id)">Delete</button>
 					</div>
 				</div>
 			</div>
