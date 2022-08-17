@@ -32,7 +32,7 @@
 				this.$router.push("/usersManagment");
 			},
 			goToSuscribe: function () {
-				this.$router.push("/suscribe");
+				this.$router.push("/suscription");
 			},
 			goLogout: function () {
 				this.$store.commit("setLogout");
@@ -59,17 +59,17 @@
 			</button>
 			<div class="collapse navbar-collapse justify-content-end" id="navbarNav">
 				<ul class="navbar-nav">
+					<li v-if="suscribe && !$store.getters.getSubscriptionStatus" class="nav-item clicklable">
+						<a class="nav-link bg-primary rounded text-white" @click="goToSuscribe">Suscribe</a>
+					</li>
 					<li v-if="home" class="nav-item clicklable">
 						<a class="nav-link" @click="goToHome">Home</a>
 					</li>
-					<li v-if="binnacle" class="nav-item clicklable">
+					<li v-if="binnacle && $store.getters.getAdmin" class="nav-item clicklable">
 						<a class="nav-link" @click="goToBinnacle">Binnacle</a>
 					</li>
-					<li v-if="usersManagment" class="nav-item clicklable">
+					<li v-if="usersManagment && $store.getters.getAdmin" class="nav-item clicklable">
 						<a class="nav-link" @click="goToUsersManagment">Users M.</a>
-					</li>
-					<li v-if="suscribe && !$store.getters.getSubscriptionStatus" class="nav-item clicklable">
-						<a class="nav-link" @click="goToSuscribe">Suscribe</a>
 					</li>
 					<li v-if="profile" class="nav-item clicklable">
 						<a class="nav-link" @click="goToProfile">Profile</a>
