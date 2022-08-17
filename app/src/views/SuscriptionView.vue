@@ -1,8 +1,25 @@
 <script>
+	import apiRequest from "../utils/apiRequest";
+
 	import AppNavbar from "../components/AppNavbar.vue";
+
 	export default {
 		name: "SuscriptionView",
 		components: { AppNavbar },
+		data: function () {
+			return {
+				successMessage: false,
+			};
+		},
+		methods: {
+			subscribe: async function (months) {
+				const response = await apiRequest(`/api/subs`, { months: months });
+				this.successMessage = true;
+				setTimeout(() => {
+					this.$router.push("/profile");
+				}, 3000);
+			},
+		},
 	};
 </script>
 
@@ -67,7 +84,7 @@
 								1000 files transfer
 							</p>
 							<br />
-							<a href="#" class="btn btn-primary">Suscribe</a>
+							<a href="#" class="btn btn-primary" @click="subscribe(1)">Subscribe</a>
 						</div>
 					</div>
 				</div>
@@ -125,7 +142,7 @@
 								10000 files transfer
 							</p>
 							<br />
-							<a href="#" class="btn btn-primary">Suscribe</a>
+							<a href="#" class="btn btn-primary" @click="subscribe(3)">Subscribe</a>
 						</div>
 					</div>
 				</div>
@@ -183,9 +200,13 @@
 								Unlimited files transfer
 							</p>
 							<br />
-							<a href="#" class="btn btn-primary" style="ficolor: crimson">Suscribe</a>
+							<a href="#" class="btn btn-primary" style="ficolor: crimson" @click="subscribe(12)">Subscribe</a>
 						</div>
 					</div>
+				</div>
+
+				<div v-if="successMessage" class="col-12 text-success text-uppercase fw-medium text-center mt-5">
+					<h4>Subscription added!</h4>
 				</div>
 			</div>
 		</div>

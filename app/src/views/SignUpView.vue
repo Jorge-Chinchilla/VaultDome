@@ -60,10 +60,10 @@
 					<label for="password" class="form-label">Password</label>
 					<input v-model="password" type="password" class="form-control" id="password" placeholder="e.g. @pass1234" />
 				</div>
-				<div class="mb-3">
+				<!-- <div class="mb-3">
 					<label for="profilePic" class="form-label">Profile Picture</label>
 					<input type="file" class="form-control" id="profilePic" />
-				</div>
+				</div> -->
 
 				<div id="btn-sup" class="mb-3">
 					<button id="" type="button" class="btn btn-outline-secondary" @click="signUp">
