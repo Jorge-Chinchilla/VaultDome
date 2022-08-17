@@ -1,7 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 import { useSessionStore } from "../stores/session";
 
-const apiRequest = async (path: string, data?: object | null) => {
+const apiRequest = async (path: string, data?: object | null, method: string) => {
 	const config: AxiosRequestConfig<object> = {
 		headers: {
 			Authorization: useSessionStore().getToken,
@@ -20,7 +20,12 @@ const apiRequest = async (path: string, data?: object | null) => {
 			.get(request, config)
 			.then((response) => response)
 			.catch((error) => errorLog(error));
-	} else {
+	} else if (method === "delete") {
+		return await axios
+			.delete(request, config)
+			.then((response) => response)
+			.catch((error) => errorLog(error));
+	} else if (data) {
 		return await axios
 			.post(request, data ?? {}, config)
 			.then((response) => response)

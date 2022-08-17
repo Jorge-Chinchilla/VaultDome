@@ -1,5 +1,7 @@
 <script lang="ts">
 	import AppNavbar from "../components/AppNavbar.vue";
+	import AppFileUploader from "../components/AppFileUploader.vue";
+
 	import { mapState } from "pinia";
 	import { useSessionStore } from "../stores/session";
 
@@ -20,10 +22,12 @@
 
 	export default {
 		name: "ProfileView",
-		components: { AppNavbar },
+		components: { AppNavbar, AppFileUploader },
 		data: function () {
 			return {
 				user: {},
+				sharedFiles: [],
+				fileIdSelected: null,
 			};
 		},
 		computed: {
@@ -35,12 +39,27 @@
 				console.debug(response.data);
 				this.user = response.data;
 			},
+			filesRequest: async function () {
+				const response = await apiRequest(`/api/files`);
+				this.sharedFiles = response.data;
+			},
+			filesDeleteRequest: async function () {
+				const response = await apiRequest(`/api/files`, { fileID: this.fileIdSelected }, "delete");
+				console.debug(response.data);
+
+				this.filesRequest();
+			},
+
+			fileSelected: function (id) {
+				this.fileIdSelected = id;
+			},
 			moment: function (date: string) {
 				return moment(date).format("MMMM Do YYYY, h:mm:ss a");
 			},
 		},
 		mounted() {
 			this.userRequest();
+			this.filesRequest();
 		},
 	};
 </script>
@@ -58,8 +77,6 @@
 
 							<div class="mt-3">
 								<h4>{{ user?.username }}</h4>
-								<button class="btn btn-info">Subscribe</button>
-								<!--<button class="btn btn-outline-primary">Message</button>-->
 							</div>
 						</div>
 					</div>
@@ -87,11 +104,11 @@
 							<div class="col-sm-9 text-secondary">{{ moment(user?.subscription) }}</div>
 						</div>
 						<hr />
-						<div class="row">
+						<!-- <div class="row">
 							<div class="col-sm-12">
 								<button class="btn btn-outline-secondary">Editar datos</button>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -119,19 +136,21 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+							<tr v-for="file in sharedFiles" :key="file?._id">
+								<td>{{ file?.baseDir }}</td>
+								<td>{{ moment(file?.createdAt) }}</td>
+								<td>{{ moment(file?.updatedAt) }}</td>
+								<td>{{ file?.desc }}</td>
 								<td>
-									<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#sendFileModal">Send</button>
-									<button type="button" class="ED btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+									<button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#sendFileModal">Send</button>
+									<button type="button" class="ED btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#deleteModal" @click="fileSelected(file?._id)">
+										Delete
+									</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<button type="button" class="ED btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFileModal">
+					<button type="button" class="ED btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFileModal" @click="uploadFile">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
 							<path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
 							<path
@@ -153,37 +172,14 @@
 					</div>
 					<div class="modal-body">Are you sure you want to delete this File?</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-danger">Delete</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="fileSelected(null)">Close</button>
+						<button type="button" class="btn btn-danger" @click="filesDeleteRequest">Delete</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<!--Add new file Modal-->
-		<div class="modal fade" id="addFileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Add New File</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<form>
-							<div class="mb-3">
-								<label for="file" class="form-label">Please, Add NeW file.</label>
-								<input type="file" name="" id="file" />
-							</div>
-							<!--<button type="submit" class="btn btn-primary">Submit</button>-->
-						</form>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Save</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<AppFileUploader @uploaded="filesRequest" />
 
 		<!--Send file-->
 		<div class="modal fade" id="sendFileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -199,9 +195,7 @@
 								<label for="SenderUser" class="form-label">Receiver User </label>
 								<select class="form-select" aria-label="Default select example">
 									<option selected>Select the receiving user</option>
-									<option value="1">One</option>
-									<option value="2">Two</option>
-									<option value="3">Three</option>
+									<option v-for="followedUser in followingUsers" :value="followedUser?._id" :key="followedUser?._id">One</option>
 								</select>
 							</div>
 							<!--<button type="submit" class="btn btn-primary">Submit</button>-->
