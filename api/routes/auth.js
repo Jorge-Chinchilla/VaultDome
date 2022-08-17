@@ -18,6 +18,15 @@ router.route('/register')
             //generar una contraseña encriptada
             const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
             const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+            var emailRegex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+
+            let valid = emailRegex.test(req.body.email)
+
+            if(!valid){
+                return res.status(400).json({ "message": "No correct email were provided" });
+            }
+
             //crear nuevo usuario
             const newUser = await new User({
                 username: req.body.username,
