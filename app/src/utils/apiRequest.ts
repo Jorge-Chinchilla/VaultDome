@@ -14,7 +14,7 @@ const apiRequest = async (path: string, data?: object | null, method: string) =>
 		console.debug("Request error", error.response, new Date().getTime());
 		return error;
 	};
-	const request = `http://127.0.0.1:8080${path}`;
+	const request = `https://api.bedev.dev${path}`;
 	if (!data && method != "get") {
 		return await axios
 			.get(request, config)
