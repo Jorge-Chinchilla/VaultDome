@@ -28,7 +28,7 @@ router.route('/:id')
                 return res.status(500).json({ "message": e });
             }
         } else {
-            return res.status(403).json({ "message": "You can only update your account" });
+            return res.status(403).json({ "message": "You can only update your account or you must be an admin" });
         }
     })
     //Eliminar un usuario
