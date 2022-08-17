@@ -1,7 +1,4 @@
-<script lang="ts">
-	import { mapActions } from "pinia";
-	import { useSessionStore } from "../stores/session";
-
+<script>
 	import apiRequest from "../utils/apiRequest";
 	import AppNavbar from "../components/AppNavbar.vue";
 
@@ -17,12 +14,10 @@
 			};
 		},
 		methods: {
-			...mapActions(useSessionStore, ["setLogin", "setLogout"]),
 			signUp: async function () {
 				const response = await apiRequest("/api/auth/register", { email: this.email, password: this.password, username: this.userName });
 				if (response?.data?.accessToken) {
-					this.setLogin(response.data?.accessToken, response.data?.userId);
-					this.$router.push("/profile");
+					this.$router.push("/login");
 				} else {
 					this.showErrorMessage = true;
 					setTimeout(() => {
@@ -32,7 +27,7 @@
 			},
 		},
 		beforeMount() {
-			this.setLogout();
+			this.$store.commit("setLogout");
 		},
 	};
 </script>

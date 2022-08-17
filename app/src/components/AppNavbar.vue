@@ -1,7 +1,4 @@
-<script lang="ts">
-	import { mapActions, mapState } from "pinia";
-	import { useSessionStore } from "../stores/session";
-
+<script>
 	export default {
 		name: "AppNavbar",
 		emits: ["logout", "login", "home", "profile", "binnacle", "usersManagment", "suscribe"],
@@ -15,12 +12,7 @@
 			usersManagment: Boolean,
 			suscribe: Boolean,
 		},
-		computed: {
-			...mapState(useSessionStore, ["getSubscriptionStatus"]),
-		},
 		methods: {
-			...mapActions(useSessionStore, ["setLogout"]),
-
 			goToLogin: function () {
 				this.$router.push("/login");
 			},
@@ -28,7 +20,7 @@
 				this.$router.push("/signup");
 			},
 			goToHome: function () {
-				this.$router.push("/home");
+				this.$router.push("/");
 			},
 			goToProfile: function () {
 				this.$router.push("/profile");
@@ -43,7 +35,7 @@
 				this.$router.push("/suscribe");
 			},
 			goLogout: function () {
-				this.setLogout();
+				this.$store.commit("setLogout");
 				this.$router.push("/login");
 			},
 		},
@@ -76,7 +68,7 @@
 					<li v-if="usersManagment" class="nav-item clicklable">
 						<a class="nav-link" @click="goToUsersManagment">Users M.</a>
 					</li>
-					<li v-if="suscribe && !getSubscriptionStatus" class="nav-item clicklable">
+					<li v-if="suscribe && !$store.getters.getSubscriptionStatus" class="nav-item clicklable">
 						<a class="nav-link" @click="goToSuscribe">Suscribe</a>
 					</li>
 					<li v-if="profile" class="nav-item clicklable">

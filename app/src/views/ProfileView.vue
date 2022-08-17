@@ -1,24 +1,9 @@
-<script lang="ts">
+<script>
 	import AppNavbar from "../components/AppNavbar.vue";
 	import AppFileUploader from "../components/AppFileUploader.vue";
 
-	import { mapState } from "pinia";
-	import { useSessionStore } from "../stores/session";
-
 	import moment from "moment";
 	import apiRequest from "../utils/apiRequest";
-
-	interface User {
-		email: string;
-		followers: Array<string>;
-		following: Array<string>;
-		isAdmin: boolean;
-		profilePicture: string;
-		sharedFiles: Array<string>;
-		subscription: string;
-		username: string;
-		_id: string;
-	}
 
 	export default {
 		name: "ProfileView",
@@ -33,12 +18,9 @@
 				deletingFile: false,
 			};
 		},
-		computed: {
-			...mapState(useSessionStore, ["getToken", "getUserId"]),
-		},
 		methods: {
-			userRequest: async function (): Promise<User | null> {
-				const response = await apiRequest(`/api/users?userId=${this.getUserId}`);
+			userRequest: async function () {
+				const response = await apiRequest(`/api/users?userId=${this.$store.getters.getUserId}`);
 				this.user = response.data;
 				this.followingUsers = response.data?.following;
 			},
@@ -57,7 +39,7 @@
 			fileSelected: function (id) {
 				this.fileIdSelected = id;
 			},
-			moment: function (date: string) {
+			moment: function (date) {
 				return moment(date).format("MMMM Do YYYY, h:mm:ss a");
 			},
 		},

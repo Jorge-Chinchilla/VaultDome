@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import apiRequest from "../utils/apiRequest";
 	import AppNavbar from "../components/AppNavbar.vue";
 

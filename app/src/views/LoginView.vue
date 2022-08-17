@@ -1,7 +1,4 @@
-<script lang="ts">
-	import { mapActions, mapState } from "pinia";
-	import { useSessionStore } from "../stores/session";
-
+<script>
 	import apiRequest from "../utils/apiRequest";
 	import AppNavbar from "../components/AppNavbar.vue";
 
@@ -18,11 +15,15 @@
 			};
 		},
 		methods: {
-			...mapActions(useSessionStore, ["setLogin", "setLogout"]),
 			requestLogin: async function () {
 				const response = await apiRequest("/api/auth/login", { email: this.email, password: this.password });
 				if (response.data) {
-					this.setLogin(response.data?.accessToken, response.data?.userId, response.data?.isAdmin, response.data?.subscription);
+					this.$store.commit("setLogin", {
+						accessToken: response.data?.accessToken,
+						userId: response.data?.userId,
+						isAdmin: response.data?.isAdmin,
+						subscription: response.data?.subscription,
+					});
 					this.$router.push("/profile");
 				} else {
 					this.showErrorMessage = true;
@@ -33,7 +34,7 @@
 			},
 		},
 		beforeMount() {
-			this.setLogout();
+			this.$store.commit("setLogout");
 		},
 	};
 </script>
