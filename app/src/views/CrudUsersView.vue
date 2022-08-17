@@ -1,6 +1,18 @@
 <script>
+	import apiRequest from "../utils/apiRequest";
+
 	export default {
 		name: "CrudUsersView",
+		data: function () {
+			return {
+				users: [],
+			};
+		},
+		methods: {},
+		mounted: async function () {
+			const response = await apiRequest(`/api/users/all`);
+			this.users = response.data;
+		},
 	};
 </script>
 
@@ -47,17 +59,17 @@
 						<tr>
 							<th scope="col">User Name</th>
 							<th scope="col">Email</th>
-							<th scope="col">Password</th>
-							<th scope="col">Location</th>
+							<th scope="col">Is Admin</th>
+							<th scope="col">Subscription</th>
 							<th scope="col">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
+						<tr v-for="user in users" :key="user?._id">
+							<td>{{ user?.username }}</td>
+							<td>{{ user?.email }}</td>
+							<td>{{ user?.isAdmin }}</td>
+							<td>{{ user?.subscription }}</td>
 							<td>
 								<button type="button" class="ED btn btn-warning">Edit</button>
 								<button type="button" class="ED btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
