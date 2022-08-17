@@ -20,6 +20,10 @@
 			};
 		},
 		methods: {
+			getFileUrl: function (id) {
+				const params = `?alt=media&token=${this.$store.getters.getToken}`;
+				return "https://firebasestorage.googleapis.com/v0/b/vaultdome.appspot.com/o/" + id + params;
+			},
 			userRequest: async function () {
 				const response = await apiRequest(`/api/users?userId=${this.$store.getters.getUserId}`);
 				this.user = response.data;
@@ -136,7 +140,9 @@
 						</thead>
 						<tbody>
 							<tr v-for="file in sharedFiles" :key="file?._id">
-								<td>{{ file?.baseDir }}</td>
+								<td>
+									<a :href="getFileUrl(file?.baseDir)">{{ file?.baseDir }}</a>
+								</td>
 								<td>{{ moment(file?.createdAt) }}</td>
 								<td>{{ moment(file?.updatedAt) }}</td>
 								<td>{{ file?.desc }}</td>
