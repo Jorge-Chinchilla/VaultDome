@@ -57,7 +57,7 @@ router.route('/login')
             if (validPassword) {
                 try{await logActivityCustom(user.id, "post", "SuccessLogin")}catch(err){}
                 
-                return res.status(200).json({ accessToken: createAccessToken(user), userId: user.id })
+                return res.status(200).json({ accessToken: createAccessToken(user), userId: user.id, isAdmin: user.isAdmin, subscription: user.subscription })
                 
             } else {
                 return res.status(400).json({ "message": "Wrong password" });

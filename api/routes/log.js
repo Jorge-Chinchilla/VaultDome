@@ -7,7 +7,7 @@ router.route('/')
     .get(checkSession, async (req, res) => {
         try {
 
-            if(! req.body.userData.isAdmin){
+            if(!req.body.userData.isAdmin){
                 return res.status(403).json({ "message": "No es usuario administrador"  });    
             }
 

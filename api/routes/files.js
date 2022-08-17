@@ -116,7 +116,6 @@ router.route('/:id')
     })
 
     .delete(checkSession, async (req, res) => {
-        console.log(req.params)
         const id = req.params.id;
         const userData = getUserData(req.headers.authorization);
         const file = await File.findById(id);
