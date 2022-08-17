@@ -32,7 +32,7 @@
 					this.showSuccessMessage = false;
 					this.showErrorMessage = false;
 					this.description = null;
-				}, 3000);
+				}, 1000);
 
 				this.$emit("uploaded");
 			},
