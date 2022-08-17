@@ -81,7 +81,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<button type="button" class="ED btn btn-primary">Add New User</button>
+				<!-- <button type="button" class="ED btn btn-primary">Add New User</button> -->
 			</div>
 		</div>
 		<div class="b-example-divider"></div>

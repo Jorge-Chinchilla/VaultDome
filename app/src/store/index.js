@@ -9,6 +9,7 @@ export default createStore({
 		userId: "",
 		isAdmin: false,
 		subscription: new Date(),
+		following: [],
 	},
 	getters: {
 		getToken: (state) => state.accessToken,
@@ -19,6 +20,7 @@ export default createStore({
 			if (!state.subscription) return false;
 			return !(new Date() >= state.subscription);
 		},
+		getFollowingUsers: (state) => state.following,
 	},
 	mutations: {
 		setLogin: function (state, payload) {
@@ -32,6 +34,19 @@ export default createStore({
 			state.userId = "";
 			state.isAdmin = false;
 			state.subscription = new Date();
+			state.following = [];
+		},
+		setFollowingUsers: function (state, payload) {
+			const followingIds = payload.following.map(user => user.id);
+			state.following = [...new Set(state.following.concat(followingIds))];
+		},
+		dropFollowingUser: function (state, payload) {
+			const index = state.following.indexOf(payload.id);
+			if (index !== -1) {
+				let following = state.following;
+				following.splice(index, 1);
+				state.following = following;
+			}
 		},
 	},
 	actions: {},

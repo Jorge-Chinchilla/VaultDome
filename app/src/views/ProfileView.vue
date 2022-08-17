@@ -27,6 +27,7 @@
 			userRequest: async function () {
 				const response = await apiRequest(`/api/users?userId=${this.$store.getters.getUserId}`);
 				this.user = response.data;
+				this.$store.commit("setFollowingUsers", { following: response.data?.following });
 				this.followingUsers = response.data?.following;
 			},
 			filesRequest: async function () {
@@ -86,6 +87,14 @@
 				</div>
 				<div class="card mb-3">
 					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-3">
+								<h6 class="mb-0">URL de Usuario</h6>
+							</div>
+							<div class="col-sm-9 text-secondary">
+								<a :href="`https://bedev.dev/profilefollow/${$store.getters.getUserId}`">https://bedev.dev/profilefollow/{{ $store.getters.getUserId }}</a>
+							</div>
+						</div>
 						<div class="row">
 							<div class="col-sm-3">
 								<h6 class="mb-0">Nombre de Usuario</h6>

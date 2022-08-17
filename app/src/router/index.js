@@ -61,7 +61,7 @@ const routes = [
 		},
 	},
 	{
-		path: "/profilefollow",
+		path: "/profilefollow/:id",
 		name: "ProfileFollow",
 		component: ProfileFollow,
 		meta: {

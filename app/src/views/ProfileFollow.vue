@@ -1,9 +1,70 @@
 <script>
 	import AppNavbar from "../components/AppNavbar.vue";
+	import apiRequest from "../utils/apiRequest";
 
 	export default {
 		name: "ProfileView",
 		components: { AppNavbar },
+		data: function () {
+			return {
+				user: null,
+				showSuccessMessage: false,
+				showErrorMessage: false,
+				message: null,
+			};
+		},
+		computed: {
+			userId: function () {
+				return this.$route.params.id;
+			},
+		},
+		methods: {
+			userRequest: async function () {
+				const response = await apiRequest(`/api/users?userId=${this.userId}`);
+				this.user = response.data;
+				this.followingUsers = response.data?.following;
+			},
+			follow: async function () {
+				const response = await apiRequest(`/api/users/${this.userId}/follow`);
+				if ((response?.data?.message == undefined || response?.data?.message) && !response.data?.accessToken) {
+					this.showErrorMessage = true;
+					this.message = response.data?.message ?? "Request wasn't proccessed";
+					console.debug(response.data);
+				} else {
+					this.showSuccessMessage = true;
+				}
+				setTimeout(() => {
+					this.$store.commit("setFollowingUsers", { following: [{ id: this.userId }] });
+					this.showSuccessMessage = false;
+					this.showErrorMessage = false;
+					this.message = null;
+					if (!response.data?.message) {
+						this.$router.push("/profile");
+					}
+				}, 2000);
+			},
+			unfollow: async function () {
+				const response = await apiRequest(`/api/users/${this.userId}/unfollow`);
+				if ((response?.data?.message == undefined || response?.data?.message) && !response.data?.accessToken) {
+					this.showErrorMessage = true;
+					this.message = response.data?.message ?? "Request wasn't proccessed";
+				} else {
+					this.showSuccessMessage = true;
+				}
+				this.$store.commit("dropFollowingUser", { id: this.userId });
+				setTimeout(() => {
+					this.showSuccessMessage = false;
+					this.showErrorMessage = false;
+					this.message = null;
+					if (!response.data?.message) {
+						this.$router.push("/profile");
+					}
+				}, 2000);
+			},
+		},
+		mounted: function () {
+			this.userRequest();
+		},
 	};
 </script>
 
@@ -20,14 +81,19 @@
 							<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150" />
 
 							<div class="mt-3">
-								<h4>Nombre de usuario</h4>
-								<button class="btn btn-info">Follow</button>
+								<h4>{{ user?.username }}</h4>
+								<button v-if="$store.getters.getFollowingUsers.includes(userId)" class="btn btn-danger" @click="unfollow">Unfollow</button>
+								<button v-else class="btn btn-info" @click="follow">Follow</button>
 								<hr />
-								<p>Email</p>
+								<p>{{ user?.email }}</p>
 								<hr />
-								<p>City</p>
-								<!--<button class="btn btn-outline-primary">Message</button>-->
+								<p>{{ user?.subscription }}</p>
 							</div>
+						</div>
+
+						<div>
+							<h4 v-if="showSuccessMessage" class="mt-4 text-center text-success">DONE</h4>
+							<h4 v-if="showErrorMessage" class="mt-4 text-center text-danger">{{ message }}</h4>
 						</div>
 					</div>
 				</div>
