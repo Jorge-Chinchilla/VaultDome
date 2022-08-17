@@ -14,8 +14,9 @@
 				sharedFiles: [],
 				followingUsers: [],
 				fileIdSelected: null,
+				userIdSelected: null,
 
-				deletingFile: false,
+				processing: false,
 			};
 		},
 		methods: {
@@ -29,10 +30,26 @@
 				this.sharedFiles = response.data;
 			},
 			filesDeleteRequest: async function () {
-				this.deletingFile = true;
+				this.processing = true;
 				const response = await apiRequest(`/api/files/${this.fileIdSelected}`, null, "delete");
 				this.filesRequest();
-				this.deletingFile = false;
+				this.processing = false;
+				this.$refs.deleteFileBtn?.click();
+			},
+			filesShareRequest: async function () {
+				this.processing = true;
+				const response = await apiRequest(
+					`/api/files/share`,
+					{
+						fileID: this.fileIdSelected,
+						sharedUserID: this.userIdSelected,
+					},
+					"delete"
+				);
+				this.filesRequest();
+				this.processing = false;
+				this.userIdSelected = null;
+				this.fileIdSelected = null;
 				this.$refs.deleteFileBtn?.click();
 			},
 
@@ -159,7 +176,7 @@
 					<div class="modal-body">Are you sure you want to delete this File?</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="fileSelected(null)">Close</button>
-						<button type="button" class="btn btn-danger" @click="filesDeleteRequest" ref="deleteFileBtn" :disabled="deletingFile">Delete</button>
+						<button type="button" class="btn btn-danger" @click="filesDeleteRequest" ref="deleteFileBtn" :disabled="processing">Delete</button>
 					</div>
 				</div>
 			</div>
@@ -179,7 +196,7 @@
 						<form>
 							<div class="mb-3">
 								<label for="SenderUser" class="form-label">Receiver User </label>
-								<select class="form-select" aria-label="Default select example">
+								<select class="form-select" aria-label="Default select example" v-model="userIdSelected">
 									<option selected>Select the receiving user</option>
 									<option v-for="followedUser in followingUsers" :value="followedUser?.id" :key="followedUser?.id">{{ followedUser.username }}</option>
 								</select>
@@ -189,7 +206,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-success">Send</button>
+						<button type="button" class="btn btn-success" @click="filesShareRequest">Send</button>
 					</div>
 				</div>
 			</div>
