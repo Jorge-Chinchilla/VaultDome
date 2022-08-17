@@ -34,23 +34,19 @@
 				const response = await apiRequest(`/api/files/${this.fileIdSelected}`, null, "delete");
 				this.filesRequest();
 				this.processing = false;
-				this.$refs.deleteFileBtn?.click();
+				this.$refs.closeDeleteFileBtn?.click();
 			},
 			filesShareRequest: async function () {
 				this.processing = true;
-				const response = await apiRequest(
-					`/api/files/share`,
-					{
-						fileID: this.fileIdSelected,
-						sharedUserID: this.userIdSelected,
-					},
-					"delete"
-				);
+				const response = await apiRequest(`/api/files/share`, {
+					fileID: this.fileIdSelected,
+					sharedUserID: this.userIdSelected,
+				});
 				this.filesRequest();
 				this.processing = false;
 				this.userIdSelected = null;
 				this.fileIdSelected = null;
-				this.$refs.deleteFileBtn?.click();
+				this.$refs.closeShareFileBtn?.click();
 			},
 
 			fileSelected: function (id) {
@@ -145,7 +141,9 @@
 								<td>{{ moment(file?.updatedAt) }}</td>
 								<td>{{ file?.desc }}</td>
 								<td>
-									<button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#sendFileModal">Send</button>
+									<button type="button" class="btn btn-success m-1" data-bs-toggle="modal" data-bs-target="#sendFileModal" @click="fileSelected(file?._id)">
+										Send
+									</button>
 									<button type="button" class="ED btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#deleteModal" @click="fileSelected(file?._id)">
 										Delete
 									</button>
@@ -175,8 +173,8 @@
 					</div>
 					<div class="modal-body">Are you sure you want to delete this File?</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="fileSelected(null)">Close</button>
-						<button type="button" class="btn btn-danger" @click="filesDeleteRequest" ref="deleteFileBtn" :disabled="processing">Delete</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="fileSelected(null)" ref="closeDeleteFileBtn">Close</button>
+						<button type="button" class="btn btn-danger" @click="filesDeleteRequest" :disabled="processing">Delete</button>
 					</div>
 				</div>
 			</div>
@@ -205,7 +203,7 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="fileSelected(null)" ref="closeShareFileBtn">Close</button>
 						<button type="button" class="btn btn-success" @click="filesShareRequest">Send</button>
 					</div>
 				</div>
