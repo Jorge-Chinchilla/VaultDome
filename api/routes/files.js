@@ -11,7 +11,8 @@ const { hardCheckSubscription, softCheckSubscription } = require("../controllers
 router.route('/')
     .post(checkSession, hardCheckSubscription, async (req, res) => {
         let file = req.files.uploadedFile;
-        let desc = req.description;
+        let desc = req.body.description;
+
         try {
             let { url, firebaseDir } = await upload(file);
             const newFile = await new File({
@@ -55,6 +56,7 @@ router.route('/')
                 const sharedUserFiles = await Promise.all(
                     req.userData.sharedFiles.map(async (fileID) => {
                         const currFile = await File.findById(fileID);
+                        console.log(currFile);
                         if (currFile) {
                             return currFile;
                         } else {
