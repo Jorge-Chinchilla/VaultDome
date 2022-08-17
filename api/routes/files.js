@@ -106,7 +106,18 @@ router.route('/share')
 router.route('/:id')
     .get(checkSession, async (req, res) => {
         const userData = await User.findById(getUserData(req.headers.authorization)._id);
-        const currFile = await File.findById(req.params.id);
+        let currFile = false;
+        try{
+            currFile = await File.findById(req.params.id);
+        }catch(err){
+            return res.status(404).json({ "message": "File not found Error" });
+        }
+        
+
+        if(!currFile){
+            return res.status(404).json({ "message": "File not found" });
+        }
+
         if (userData.id === currFile.userID || userData.sharedFiles.includes(req.params.id)) {
             const currUrl = jwt.verify(currFile.hash, process.env.TOKEN_SECRET).url;
             res.status(200).json({ "url": currUrl });
