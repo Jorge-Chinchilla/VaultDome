@@ -8,6 +8,7 @@
 			return {
 				showSuccessMessage: false,
 				showErrorMessage: false,
+				errorMessage: null,
 				description: null,
 			};
 		},
@@ -22,6 +23,7 @@
 				if (response.data?.url) {
 					this.showSuccessMessage = true;
 				} else {
+					this.errorMessage = response.data?.message;
 					this.showErrorMessage = true;
 				}
 
@@ -66,7 +68,7 @@
 
 					<div class="w-100">
 						<p v-show="showSuccessMessage" class="text-success">File uploaded!</p>
-						<p v-show="showErrorMessage" class="text-danger">Error. File not uploaded :(</p>
+						<p v-show="showErrorMessage" class="text-danger">Error. {{ errorMessage }}</p>
 					</div>
 				</div>
 			</div>
