@@ -119,6 +119,10 @@ router.route('/:id')
         const id = req.params.id;
         const userData = getUserData(req.headers.authorization);
         const file = await File.findById(id);
+        if(!file){
+            return res.status(404).json({ "message": "file not found" });
+        }
+
         if (userData._id === file.userID || req.body.isAdmin) {
             try {
                 await File.findByIdAndDelete(id);
