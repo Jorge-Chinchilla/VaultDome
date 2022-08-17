@@ -27,7 +27,10 @@
 			return {
 				user: {},
 				sharedFiles: [],
+				followingUsers: [],
 				fileIdSelected: null,
+
+				deletingFile: false,
 			};
 		},
 		computed: {
@@ -43,8 +46,11 @@
 				this.sharedFiles = response.data;
 			},
 			filesDeleteRequest: async function () {
-				const response = await apiRequest(`/api/files/${this.fileIdSelected}`, "delete");
+				this.deletingFile = true;
+				const response = await apiRequest(`/api/files/${this.fileIdSelected}`, null, "delete");
 				this.filesRequest();
+				this.deletingFile = false;
+				this.$refs.deleteFileBtn?.click();
 			},
 
 			fileSelected: function (id) {
@@ -170,7 +176,7 @@
 					<div class="modal-body">Are you sure you want to delete this File?</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="fileSelected(null)">Close</button>
-						<button type="button" class="btn btn-danger" @click="filesDeleteRequest">Delete</button>
+						<button type="button" class="btn btn-danger" @click="filesDeleteRequest" ref="deleteFileBtn" :disabled="deletingFile">Delete</button>
 					</div>
 				</div>
 			</div>

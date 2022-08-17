@@ -15,12 +15,13 @@ const apiRequest = async (path: string, data?: object | null, method: string) =>
 		return error;
 	};
 	const request = `http://127.0.0.1:8080${path}`;
-	if (!data) {
+	if (!data && method != "get") {
 		return await axios
 			.get(request, config)
 			.then((response) => response)
 			.catch((error) => errorLog(error));
 	} else if (method === "delete") {
+		console.debug("DELETE");
 		return await axios
 			.delete(request, config)
 			.then((response) => response)
