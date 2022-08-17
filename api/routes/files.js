@@ -113,6 +113,23 @@ router.route('/:id')
         } else {
             res.status(403).json({ "message": "User has no access to the file" });
         }
+    })
+
+    .delete(checkSession, async (req, res) => {
+        const id = req.params.id;
+        const userData = getUserData(req.headers.authorization);
+        const file = await File.findById(id);
+        if (userData._id === file.userID || req.body.isAdmin) {
+            try {
+                await File.findByIdAndDelete(id);
+                await deleteFile(file.baseDir);
+                res.status(200).json({ "message": "File deleted" });
+            } catch (e) {
+                return res.status(500).json({ "message": e });
+            }
+        } else {
+            return res.status(403).json({ "message": "You can only delete your files" });
+        }
     });
 
 module.exports = router;

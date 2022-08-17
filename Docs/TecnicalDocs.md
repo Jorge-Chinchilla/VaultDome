@@ -10,14 +10,17 @@ Definición de arquitectura de archivos y estándares a utilizar en el desarroll
     ├─controllers/
     ├ └─ auth.controllers.js
     ├──  suscriptions.controllers.js
+    ├──  logs.controllers.js
     ├─models/
     ├ └─ File.js
     ├──  User.js
+    ├──  Log.js
     ├─routes/
     ├─└─ auth.js
     ├──  files.js
     ├──  subs.js
     ├──  users.js
+    ├──  log.js
 ```
 
 * index.js: Punto de arranque de la API
@@ -30,7 +33,7 @@ Definición de arquitectura de archivos y estándares a utilizar en el desarroll
 
 
 ## Controladores
-La definción de los controladores fue basada en el requerimiento de tener la posibilidad de hacer revisión de la autenticación y estado de la suscripciones de los usarios en multiples endpoints de la API.
+La definción de los controladores fue basada en el requerimiento de tener la posibilidad de hacer revisión de la autenticación y estado de la suscripciones de los usarios en multiples endpoints de la API. También el manejo del registro de logs fue una necesidad presentada en multiples direcciones por lo que fue agregado un controlador especial para el procesmiento de esto
 
 ### Definición
 
@@ -77,7 +80,6 @@ Tabla de usuarios en la que se definen los usuarios, suscripciones, relaciones d
 
 * sharedFiles: Usuarios compartidos
 
-### Archivos
 
 #### File
 
@@ -92,6 +94,21 @@ Esquema de archivos en la cual se guardan de forma encriptadas los accesos a los
 * hash
 
 * baseDir
+
+#### Bitácora
+
+Esquema para el almacenamiento de los registros de bitácora los cuales guardan los procedimientos dirigidos por usuarios
+
+##### Campos:
+
+* userID
+
+* Date
+
+* Type
+
+* action
+
 
 ## FireStorage
 
