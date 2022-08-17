@@ -99,7 +99,7 @@
 							<td>{{ user?.isAdmin }}</td>
 							<td>{{ user?.subscription }}</td>
 							<td>
-								<button type="button" class="ED btn btn-warning" :ref="'editUserBtn' + user?._id">Edit</button>
+								<!-- <button type="button" class="ED btn btn-warning" :ref="'editUserBtn' + user?._id">Edit</button> -->
 								<button type="button" class="ED btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" @click="setUserId(user?._id)">
 									Delete
 								</button>
