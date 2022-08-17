@@ -40,6 +40,7 @@
 			userRequest: async function (): Promise<User | null> {
 				const response = await apiRequest(`/api/users?userId=${this.getUserId}`);
 				this.user = response.data;
+				this.followingUsers = response.data?.following;
 			},
 			filesRequest: async function () {
 				const response = await apiRequest(`/api/files`);
@@ -189,7 +190,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Send File NOMBRE DE ARCHIVO</h5>
+						<h5 class="modal-title" id="exampleModalLabel">Send File</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
@@ -198,7 +199,7 @@
 								<label for="SenderUser" class="form-label">Receiver User </label>
 								<select class="form-select" aria-label="Default select example">
 									<option selected>Select the receiving user</option>
-									<option v-for="followedUser in followingUsers" :value="followedUser?._id" :key="followedUser?._id">One</option>
+									<option v-for="followedUser in followingUsers" :value="followedUser?.id" :key="followedUser?.id">{{ followedUser.username }}</option>
 								</select>
 							</div>
 							<!--<button type="submit" class="btn btn-primary">Submit</button>-->
