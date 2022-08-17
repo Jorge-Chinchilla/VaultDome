@@ -118,7 +118,7 @@ router.route('/:id/follow')
     });
 //Dejar de seguir a un usuario
 router.route('/:id/unfollow')
-    .put(checkSession, async (req, res) => {
+    .get(checkSession, async (req, res) => {
 
         let userData = getUserData(req.headers.authorization);
 
