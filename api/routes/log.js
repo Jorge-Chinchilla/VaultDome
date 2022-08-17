@@ -1,10 +1,16 @@
 const Log = require("../models/Log");
 const router = require('express').Router();
+const { createAccessToken, checkSession, getUserData } = require('../controllers/auth.controllers');
 
 
 router.route('/')
-    .get(async (req, res) => {
+    .get(checkSession, async (req, res) => {
         try {
+
+            if(! req.body.userData.isAdmin){
+                return res.status(403).json({ "message": "No es usuario administrador"  });    
+            }
+
             const logs = await Log.find({});
 
             return res.status(200).json(logs);
