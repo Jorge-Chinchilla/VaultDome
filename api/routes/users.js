@@ -91,7 +91,7 @@ router.get("/", checkSession, async (req, res) => {
 
 //Seguir a un usuario
 router.route('/:id/follow')
-    .put(checkSession, async (req, res) => {
+    .get(checkSession, async (req, res) => {
 
         let userData = getUserData(req.headers.authorization);
 
