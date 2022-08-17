@@ -41,6 +41,7 @@ const router = createRouter({
 			component: CrudUsersView,
 			meta: {
 				requireAuth: true,
+				requireAdmin: true,
 			},
 		},
 		{
@@ -49,6 +50,7 @@ const router = createRouter({
 			component: BinnacleView,
 			meta: {
 				requireAuth: true,
+				requireAdmin: true,
 			},
 		},
 		{
@@ -72,7 +74,7 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
 	const session = useSessionStore();
-	if (!session.getToken && to.meta.requireAuth) return "/login";
+	if ((!session.getToken && to.meta.requireAuth) || (!session.getAdmin && to.meta.requireAdmin)) return "/login";
 });
 
 export default router;

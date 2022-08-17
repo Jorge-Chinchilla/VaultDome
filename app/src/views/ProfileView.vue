@@ -36,7 +36,6 @@
 		methods: {
 			userRequest: async function (): Promise<User | null> {
 				const response = await apiRequest(`/api/users?userId=${this.getUserId}`);
-				console.debug(response.data);
 				this.user = response.data;
 			},
 			filesRequest: async function () {
@@ -44,9 +43,7 @@
 				this.sharedFiles = response.data;
 			},
 			filesDeleteRequest: async function () {
-				const response = await apiRequest(`/api/files`, { fileID: this.fileIdSelected }, "delete");
-				console.debug(response.data);
-
+				const response = await apiRequest(`/api/files/${this.fileIdSelected}`, "delete");
 				this.filesRequest();
 			},
 

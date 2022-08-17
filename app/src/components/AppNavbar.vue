@@ -16,7 +16,7 @@
 			suscribe: Boolean,
 		},
 		computed: {
-			...mapState(useSessionStore, ["token"]),
+			...mapState(useSessionStore, ["getSubscriptionStatus"]),
 		},
 		methods: {
 			...mapActions(useSessionStore, ["setLogout"]),
@@ -76,7 +76,7 @@
 					<li v-if="usersManagment" class="nav-item clicklable">
 						<a class="nav-link" @click="goToUsersManagment">Users M.</a>
 					</li>
-					<li v-if="suscribe" class="nav-item clicklable">
+					<li v-if="suscribe && !getSubscriptionStatus" class="nav-item clicklable">
 						<a class="nav-link" @click="goToSuscribe">Suscribe</a>
 					</li>
 					<li v-if="profile" class="nav-item clicklable">
