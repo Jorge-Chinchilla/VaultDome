@@ -126,7 +126,7 @@ router.route('/:id')
         if (userData._id === file.userID || req.body.isAdmin) {
             try {
                 await File.findByIdAndDelete(id);
-                await deleteFile(file.baseDir);
+                //await deleteFile(file.baseDir);
                 res.status(200).json({ "message": "File deleted" });
             } catch (e) {
                 return res.status(500).json({ "message": e });
